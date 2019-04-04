@@ -18,6 +18,7 @@ namespace Simplex
 class Application
 {
 	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager
+	MyEntity* m_eSpaceship = nullptr; // Represents the player spaceship
 	MyOctant* m_pRoot = nullptr; // Root of the octree
 	uint m_uOctantID = -1; //Index of Octant to display
 	uint m_uObjects = 0; //Number of objects in the scene

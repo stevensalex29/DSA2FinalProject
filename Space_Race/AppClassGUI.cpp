@@ -8,23 +8,19 @@ void Application::DrawGUI(void)
 	uint nEmptyLines = 20;
 	for (uint i = 0; i < nEmptyLines; ++i)
 		m_pMeshMngr->PrintLine("");//Add a line on top
-	//m_pMeshMngr->Print("						");
-	m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), C_YELLOW);
-	//m_pMeshMngr->Print("						");
 
-	//m_pMeshMngr->Print("						");
-	m_pMeshMngr->Print("RenderCalls: ");//Add a line on top
-	m_pMeshMngr->PrintLine(std::to_string(m_uRenderCallCount), C_YELLOW);
+	m_pMeshMngr->Print("Time Left:");
+	m_pMeshMngr->PrintLine("0", C_RED);
 
-	//m_pMeshMngr->Print("						");
-	m_pMeshMngr->Print("FPS:");
-	m_pMeshMngr->PrintLine(std::to_string(m_pSystem->GetFPS()), C_RED);
+	//m_pMeshMngr->Print("FPS:");
+	//m_pMeshMngr->PrintLine(std::to_string(m_pSystem->GetFPS()), C_RED);
 #pragma endregion
 
 	//Calculate the window size to know how to draw
 	NewFrame();
 
 	static ImVec4 v4Color = ImColor(255, 0, 0);
+	static ImVec4 v4Color2 = ImColor(255, 255, 0);
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
 	//Main Window
 	if (m_bGUI_Main)
@@ -34,28 +30,16 @@ void Application::DrawGUI(void)
 		String sAbout = m_pSystem->GetAppName() + " - About";
 		ImGui::Begin(sAbout.c_str(), (bool*)0, window_flags);
 		{
-			ImGui::Text("Programmer: \n");
-			ImGui::TextColored(v4Color, m_sProgrammer.c_str());
+			String team = "Team: " + m_sProgrammer;
+			ImGui::TextColored(v4Color, team.c_str());
 			ImGui::Text("FrameRate: %.2f [FPS] -> %.3f [ms/frame]\n",
 				ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
-			ImGui::Text("Levels in Octree: %d\n", m_uOctantLevels);
-			ImGui::Text("Octants: %d\n", m_pRoot->GetOctantCount());
 			ImGui::Text("Objects: %d\n", m_uObjects);
 			ImGui::Separator();
 			ImGui::Text("Control:\n");
-			ImGui::Text("   WASD: Movement\n");
-			ImGui::Text("	 F1: Perspective\n");
-			ImGui::Text("	 F2: Orthographic X\n");
-			ImGui::Text("	 F3: Orthographic Y\n");
-			ImGui::Text("	 F4: Orthographic Z\n");
+			ImGui::Text("Arrow Keys - Move Spaceship\n");
 			ImGui::Separator();
-			ImGui::Text(" PageUp: Increment Octant display\n");
-			ImGui::Text(" PageDw: Decrement Octant display\n");
-			ImGui::Separator();
-			ImGui::Text("	  -: Increment Octree subdivision\n");
-			ImGui::Text("	  +: Decrement Octree subdivision\n");
-			ImGui::Separator();
-			ImGui::TextColored(ImColor(255, 255, 0), "Octree\n");
+			ImGui::TextColored(v4Color2, m_pSystem->GetAppName().c_str());
 		}
 		ImGui::End();
 	}

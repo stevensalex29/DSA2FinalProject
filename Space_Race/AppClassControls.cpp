@@ -430,6 +430,16 @@ void Application::ProcessKeyboard(void)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
 		m_pCameraMngr->MoveVertical(m_fMovementSpeed * fMultiplier);
 #pragma endregion
+
+	// Put ship movement code here, use m_eSpaceship entity
+	//if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	//	//move ship forward
+	//if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	//	//move ship backwards
+	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	//	//move ship to the right
+	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	//	//move ship to the left
 }
 //Joystick
 void Application::ProcessJoystick(void)
