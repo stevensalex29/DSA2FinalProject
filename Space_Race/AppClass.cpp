@@ -13,7 +13,7 @@ void Application::InitVariables(void)
 #ifdef DEBUG
 	uint uInstances = 900;
 #else
-	uint uInstances = 1849;
+	uint uInstances = 100;
 #endif
 	int nSquare = static_cast<int>(std::sqrt(uInstances));
 	m_uObjects = nSquare * nSquare;
@@ -23,7 +23,7 @@ void Application::InitVariables(void)
 		for (int j = 0; j < nSquare; j++)
 		{
 			uIndex++;
-			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj");
+			m_pEntityMngr->AddEntity("AndyIsTheTeamArtist\\Spaceship.obj");
 			vector3 v3Position = vector3(glm::sphericalRand(34.0f));
 			matrix4 m4Position = glm::translate(v3Position);
 			m_pEntityMngr->SetModelMatrix(m4Position);
