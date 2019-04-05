@@ -51,23 +51,30 @@ void Application::Update(void)
 
 	//gets position matrix
 	matrix4 m4Position = glm::translate(IDENTITY_M4, v3Position);
+	matrix4 m4Scale = glm::scale(IDENTITY_M4, vector3(2.0f, 2.0f, 2.0f));
 
+
+	//locks rotation at 45 degree angle
 	if (rot > 45)
 		rot = 45;
 	if (rot < -45)
 		rot = -45;
 
 
-	quaternion q2 = glm::angleAxis(glm::radians(rot), AXIS_Y);
-
+	//quaternion q2 = glm::axisAngle();
+	
+	m4Position += m4Scale;
 	//sets position of the ship
-	m_eSpaceship->SetModelMatrix(ToMatrix4(q2));
+	//m_eSpaceship->SetModelMatrix(m4Position);
+	m_eSpaceship->SetModelMatrix(m4Position);
 
 	//Set the position and target of the camera
 	m_pCameraMngr->SetPositionTargetAndUpward(
 		vector3(0.0f + v3Position.x, 2.0f, -5.0f+v3Position.z), //Position
 		v3Position,	//Target
 		AXIS_Y);//Up
+
+
 
 	//Update Entity Manager
 	m_pEntityMngr->Update();

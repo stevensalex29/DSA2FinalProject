@@ -68,9 +68,9 @@ void Application::ProcessMouseScroll(sf::Event a_event)
 //Keyboard
 void Application::ProcessKeyPressed(sf::Event a_event)
 {
+	
 	static float speed = .2f;
 	//speed += .01f;
-	std::cout << speed<< std::endl;
 	switch (a_event.key.code)
 	{
 	default: break;
@@ -82,17 +82,16 @@ void Application::ProcessKeyPressed(sf::Event a_event)
 		m_bModifier = true;
 		break;
 	case sf::Keyboard::W:
-		
-		//v3Position 
-		v3Position += vector3(0.0f,0.0f, speed);
-		break;
-	case sf::Keyboard::S:
 
 		//v3Position 
 		v3Position += vector3(0.0f, 0.0f, -speed);
 		break;
-	case sf::Keyboard::A:
+	case sf::Keyboard::S:
 
+		//v3Position 
+		v3Position += vector3(0.0f, 0.0f, speed);
+		break;
+	case sf::Keyboard::A:
 
 		//v3Position 
 		rot += 1.0f;
@@ -201,6 +200,7 @@ void Application::ProcessJoystickPressed(sf::Event a_event)
 
 	//Identify the button pressed
 	int nButton = a_event.joystickButton.button;
+
 	//map the value to our control value
 	m_pController[nID]->button[m_pController[nID]->mapButton[nButton]] = true;
 
@@ -217,7 +217,8 @@ void Application::ProcessJoystickReleased(sf::Event a_event)
 
 	//Identify the button pressed
 	int nButton = a_event.joystickButton.button;
-	//map the value to our control value
+	
+//map the value to our control value
 	m_pController[nID]->button[m_pController[nID]->mapButton[nButton]] = false;
 
 	//Process...
@@ -231,6 +232,9 @@ void Application::ProcessJoystickMoved(sf::Event a_event)
 	int nID = a_event.joystickMove.joystickId;
 	float fPosition = a_event.joystickMove.position;
 	int nAxis = a_event.joystickMove.axis;
+
+
+	v3Position += vector3(0.0f, 0.0f, fPosition/5);
 
 	//invert vertical axis for sticks
 	if (nAxis == sf::Joystick::Axis::Y || nAxis == sf::Joystick::Axis::R)
@@ -464,6 +468,9 @@ void Application::ProcessKeyboard(void)
 	//	//move ship to the right
 	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	//	//move ship to the left
+
+
+
 }
 //Joystick
 void Application::ProcessJoystick(void)
