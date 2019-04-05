@@ -191,6 +191,7 @@ void Simplex::MyEntityManager::AddEntity(String a_sFileName, String a_sUniqueID)
 	{
 		//create a new temp array with one extra entry
 		PEntity* tempArray = new PEntity[m_uEntityCount + 1];
+		
 		//start from 0 to the current count
 		uint uCount = 0;
 		for (uint i = 0; i < m_uEntityCount; ++i)

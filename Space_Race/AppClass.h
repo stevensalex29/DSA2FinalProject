@@ -23,6 +23,12 @@ class Application
 	uint m_uOctantID = -1; //Index of Octant to display
 	uint m_uObjects = 0; //Number of objects in the scene
 	uint m_uOctantLevels = 0; //Number of levels in the octree
+	vector3 v3Position;
+	vector3 v3Center;
+
+	float rot = 0.0f;
+
+
 private:
 	String m_sProgrammer = "GoodFolderMaterial"; //programmer
 

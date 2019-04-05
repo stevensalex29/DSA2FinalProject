@@ -68,6 +68,9 @@ void Application::ProcessMouseScroll(sf::Event a_event)
 //Keyboard
 void Application::ProcessKeyPressed(sf::Event a_event)
 {
+	static float speed = .2f;
+	//speed += .01f;
+	std::cout << speed<< std::endl;
 	switch (a_event.key.code)
 	{
 	default: break;
@@ -77,6 +80,27 @@ void Application::ProcessKeyPressed(sf::Event a_event)
 	case sf::Keyboard::LShift:
 	case sf::Keyboard::RShift:
 		m_bModifier = true;
+		break;
+	case sf::Keyboard::W:
+		
+		//v3Position 
+		v3Position += vector3(0.0f,0.0f, speed);
+		break;
+	case sf::Keyboard::S:
+
+		//v3Position 
+		v3Position += vector3(0.0f, 0.0f, -speed);
+		break;
+	case sf::Keyboard::A:
+
+
+		//v3Position 
+		rot += 1.0f;
+		break;
+	case sf::Keyboard::D:
+
+		//v3Position 
+		rot -= 1.0f;
 		break;
 	}
 	
