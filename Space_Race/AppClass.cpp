@@ -82,14 +82,20 @@ void Application::Update(void)
 	//sets matrix of the ship
 	m_eSpaceship->SetModelMatrix(m4ModelMatrix);
 
-	//Set the position and target of the camera
-		//m_pCameraMngr->SetPositionTargetAndUpward(
-		//	vector3(0.0f + v3Position.x, 2.0f, -5.0f+v3Position.z), //Position
-		//	v3Position,	//Target
-		//	AXIS_Y);//Up
+	vector3 camPos;
+
+	// follow the ship
+	camPos = vector3(
+		v3Position.x - 5 * sin(rot),
+		v3Position.y + 2,
+		v3Position.z - 5 * cos(rot)
+	);
+
+	// stay in center of screen
+	//camPos = vector3(0, 2, -5);
 
 	m_pCameraMngr->SetPositionTargetAndUpward(
-		vector3(0, 2, -5), //Position
+		camPos,
 		v3Position,	//Target
 		AXIS_Y);//Up
 
