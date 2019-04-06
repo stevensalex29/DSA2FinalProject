@@ -49,31 +49,49 @@ void Application::Update(void)
 	//Is the ArcBall active?
 	ArcBall();
 
-	//gets position matrix
-	matrix4 m4Position = glm::translate(IDENTITY_M4, v3Position);
-	matrix4 m4Scale = glm::scale(IDENTITY_M4, vector3(2.0f, 2.0f, 2.0f));
+	// move forward
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	{
+		v3Position += vector3(0.5f, 0.0f, 0.5f) * vector3(sin(rot), 0, cos(rot));
+	}
 
+	// move backward
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	{
+		v3Position += vector3(-0.5f, 0.0f, -0.5f) * vector3(sin(rot), 0, cos(rot));
+	}
 
-	//locks rotation at 45 degree angle
-	if (rot > 45)
-		rot = 45;
-	if (rot < -45)
-		rot = -45;
+	// steer left
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	{
+		rot += 0.05f;
+	}
 
+	// steer right
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	{
+		rot -= 0.05f;
+	}
 
-	//quaternion q2 = glm::axisAngle();
+	// create the model matrix with position, rotation, and scale
+	matrix4 m4ModelMatrix = IDENTITY_M4;
+	m4ModelMatrix = glm::translate(m4ModelMatrix, v3Position);
+	m4ModelMatrix = glm::rotate(m4ModelMatrix, rot, glm::vec3(0, 1, 0));
+	m4ModelMatrix = glm::scale(m4ModelMatrix, vector3(2.0f, 2.0f, 2.0f));
 	
-	m4Position += m4Scale;
-	//sets position of the ship
-	//m_eSpaceship->SetModelMatrix(m4Position);
-	m_eSpaceship->SetModelMatrix(m4Position);
+	//sets matrix of the ship
+	m_eSpaceship->SetModelMatrix(m4ModelMatrix);
 
 	//Set the position and target of the camera
+		//m_pCameraMngr->SetPositionTargetAndUpward(
+		//	vector3(0.0f + v3Position.x, 2.0f, -5.0f+v3Position.z), //Position
+		//	v3Position,	//Target
+		//	AXIS_Y);//Up
+
 	m_pCameraMngr->SetPositionTargetAndUpward(
-		vector3(0.0f + v3Position.x, 2.0f, -5.0f+v3Position.z), //Position
+		vector3(0, 2, -5), //Position
 		v3Position,	//Target
 		AXIS_Y);//Up
-
 
 
 	//Update Entity Manager

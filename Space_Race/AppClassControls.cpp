@@ -81,26 +81,6 @@ void Application::ProcessKeyPressed(sf::Event a_event)
 	case sf::Keyboard::RShift:
 		m_bModifier = true;
 		break;
-	case sf::Keyboard::W:
-
-		//v3Position 
-		v3Position += vector3(0.0f, 0.0f, -speed);
-		break;
-	case sf::Keyboard::S:
-
-		//v3Position 
-		v3Position += vector3(0.0f, 0.0f, speed);
-		break;
-	case sf::Keyboard::A:
-
-		//v3Position 
-		rot += 1.0f;
-		break;
-	case sf::Keyboard::D:
-
-		//v3Position 
-		rot -= 1.0f;
-		break;
 	}
 	
 	//gui
