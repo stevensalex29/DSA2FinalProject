@@ -11,6 +11,7 @@ Date: 2017/06
 #include "imgui\ImGuiObject.h"
 
 #include "MyOctant.h"
+#include <vector>
 
 namespace Simplex
 {
@@ -19,6 +20,7 @@ class Application
 {
 	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager
 	MyEntity* m_eSpaceship = nullptr; // Represents the player spaceship
+	MyEntity** m_eTrafficConesList;
 	MyOctant* m_pRoot = nullptr; // Root of the octree
 	uint m_uOctantID = -1; //Index of Octant to display
 	uint m_uObjects = 0; //Number of objects in the scene
@@ -27,7 +29,7 @@ class Application
 	vector3 v3Center;
 
 	float rot = 0.0f;
-
+	uint uIndex = 0;
 
 private:
 	String m_sProgrammer = "GoodFolderMaterial"; //programmer
@@ -126,6 +128,16 @@ private:
 	OUTPUT: ---
 	*/
 	void InitVariables(void);
+	/*
+	USAGE: Creates a row of (two) traffic cones at a position. The span is the radius of how far apart the
+	traffic cones are from each other. The xPosDegreeAngle is the rotation along the x axis that the span is.
+	*/
+	void CreateTrafficConeRowAt(vector3 startPos, float span, float xPosDegreeAngle);
+	/*
+	USAGE: Creates a traffic cone object and adds it to the entity manager.
+	ARGUMENTS: position, size. These attributes apply directly to the traffic cone model and bounding box.
+	*/
+	void CreateTrafficConeAt(vector3 position, vector3 size);
 	/*
 	USAGE: Reads the configuration of the application to a file
 	ARGUMENTS: ---

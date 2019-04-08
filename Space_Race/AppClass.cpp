@@ -19,7 +19,6 @@ void Application::InitVariables(void)
 #endif
 	//int nSquare = static_cast<int>(std::sqrt(uInstances));
 	//m_uObjects = nSquare * nSquare;
-	uint uIndex = 0;
 	//for (int i = 0; i < nSquare; i++)
 	//{
 		//for (int j = 0; j < nSquare; j++)
@@ -36,11 +35,38 @@ void Application::InitVariables(void)
 	matrix4 m4Position = glm::translate(v3Position);
 	m_pEntityMngr->SetModelMatrix(m4Position);
 	m_eSpaceship = m_pEntityMngr->GetEntity(uIndex);
+	uIndex++;
+
+	m_eTrafficConesList = new MyEntity*[100];
+
+	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 1.0f), 3.0f, 0.0f);
+	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 2.0f), 3.0f, 0.0f);
+	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 3.0f), 3.0f, 0.0f);
+	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 4.0f), 3.0f, 0.0f);
+	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 5.0f), 3.0f, 0.0f);
 
 	m_uOctantLevels = 1;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 	m_pEntityMngr->Update();
 }
+
+void Application::CreateTrafficConeRowAt(vector3 startPos, float span, float xPosDegreeAngle) {
+	CreateTrafficConeAt(vector3(startPos.x - span, startPos.y, startPos.z), vector3(0.2f));
+	CreateTrafficConeAt(vector3(startPos.x + span, startPos.y, startPos.z), vector3(0.2f));
+}
+
+void Application::CreateTrafficConeAt(vector3 position, vector3 size) {
+	m_pEntityMngr->AddEntity("AndyIsTheTeamArtist\\TrafficCone.obj");
+	vector3 trafficConePos = position;
+	vector3 trafficConeScale = size;
+	matrix4 trafficConeScaleMatrix = glm::translate(trafficConeScale);
+	matrix4 trafficConeMatrix = glm::translate(v3Position);
+	trafficConeMatrix = glm::scale(glm::translate(IDENTITY_M4, trafficConePos), trafficConeScale);
+	m_pEntityMngr->SetModelMatrix(trafficConeMatrix);
+	m_eTrafficConesList[uIndex] = m_pEntityMngr->GetEntity(uIndex);
+	uIndex++;
+}
+
 void Application::Update(void)
 {
 	//Update the system so it knows how much time has passed since the last call
@@ -136,6 +162,8 @@ void Application::Release(void)
 {
 	// release the octree
 	SafeDelete(m_pRoot);
+
+	delete m_eTrafficConesList;
 
 	//release GUI
 	ShutdownGUI();
