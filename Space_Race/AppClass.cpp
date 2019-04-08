@@ -36,7 +36,7 @@ void Application::InitVariables(void)
 	matrix4 m4Position = glm::translate(v3Position);
 	m_pEntityMngr->SetModelMatrix(m4Position);
 	m_eSpaceship = m_pEntityMngr->GetEntity(uIndex);
-	
+
 	m_uOctantLevels = 1;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 	m_pEntityMngr->Update();
