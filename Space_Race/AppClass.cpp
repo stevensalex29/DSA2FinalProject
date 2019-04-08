@@ -45,6 +45,7 @@ void Application::InitVariables(void)
 	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 4.0f), 3.0f, 0.0f);
 	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 5.0f), 3.0f, 0.0f);
 
+
 	m_uOctantLevels = 1;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 	m_pEntityMngr->Update();
@@ -57,12 +58,8 @@ void Application::CreateTrafficConeRowAt(vector3 startPos, float span, float xPo
 
 void Application::CreateTrafficConeAt(vector3 position, vector3 size) {
 	m_pEntityMngr->AddEntity("AndyIsTheTeamArtist\\TrafficCone.obj");
-	vector3 trafficConePos = position;
-	vector3 trafficConeScale = size;
-	matrix4 trafficConeScaleMatrix = glm::translate(trafficConeScale);
-	matrix4 trafficConeMatrix = glm::translate(v3Position);
-	trafficConeMatrix = glm::scale(glm::translate(IDENTITY_M4, trafficConePos), trafficConeScale);
-	m_pEntityMngr->SetModelMatrix(trafficConeMatrix);
+	matrix4 trafficConeMatrix = glm::translate(position);
+	m_pEntityMngr->SetModelMatrix(trafficConeMatrix * glm::scale(size));
 	m_eTrafficConesList[uIndex] = m_pEntityMngr->GetEntity(uIndex);
 	uIndex++;
 }
@@ -125,6 +122,11 @@ void Application::Update(void)
 		v3Position,	//Target
 		AXIS_Y);//Up
 
+
+	// Needs to reconstruct octree (player might move as well as objects)
+	m_pEntityMngr->ClearDimensionSetAll();
+	SafeDelete(m_pRoot);
+	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
 	//Update Entity Manager
 	m_pEntityMngr->Update();
