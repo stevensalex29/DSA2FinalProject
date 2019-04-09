@@ -21,6 +21,13 @@ class Application
 	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager
 	MyEntity* m_eSpaceship = nullptr; // Represents the player spaceship
 	MyEntity** m_eTrafficConesList;
+	vector3* m_vConeSetPositions;
+	vector3 m_vResetPosition;
+	vector3 m_vNextResetPosition;
+	vector3 m_vFinishPosition;
+	uint m_uCurrentConeIndex = 0;
+	uint m_uNumConePositions = 0;
+	float m_fConeSpan;
 	MyOctant* m_pRoot = nullptr; // Root of the octree
 	uint m_uOctantID = -1; //Index of Octant to display
 	uint m_uObjects = 0; //Number of objects in the scene

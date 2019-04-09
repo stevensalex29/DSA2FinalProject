@@ -17,35 +17,40 @@ void Application::InitVariables(void)
 #else
 	uint uInstances = 1;
 #endif
-	//int nSquare = static_cast<int>(std::sqrt(uInstances));
-	//m_uObjects = nSquare * nSquare;
-	//for (int i = 0; i < nSquare; i++)
-	//{
-		//for (int j = 0; j < nSquare; j++)
-		//{
-			// Add objects to entity manager here
-			//uIndex++;
-			
-			//moved all below
-		//}
-	//}
 
-	m_pEntityMngr->AddEntity("AndyIsTheTeamArtist\\Spaceship.obj");
-	v3Position = vector3(0.0f, 0.0f, 0.0f);
-	matrix4 m4Position = glm::translate(v3Position);
-	m_pEntityMngr->SetModelMatrix(m4Position);
-	m_eSpaceship = m_pEntityMngr->GetEntity(uIndex);
-	uIndex++;
-
+	// create traffic cones
 	m_eTrafficConesList = new MyEntity*[100];
-
+	m_vConeSetPositions = new vector3[100];
+	m_fConeSpan = 3.0f;
 	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 1.0f), 3.0f, 0.0f);
 	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 2.0f), 3.0f, 0.0f);
 	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 3.0f), 3.0f, 0.0f);
 	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 4.0f), 3.0f, 0.0f);
 	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 5.0f), 3.0f, 0.0f);
+	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 6.0f), 3.0f, 0.0f);
+	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 7.0f), 3.0f, 0.0f);
+	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 8.0f), 3.0f, 0.0f);
+	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 9.0f), 3.0f, 0.0f);
+	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 10.0f), 3.0f, 0.0f);
 
+	// set initial reset position, next reset position, and finish position
 
+	if (m_uNumConePositions > 0) {
+		m_vResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
+		m_uCurrentConeIndex++;
+		if (m_uCurrentConeIndex < m_uNumConePositions) m_vNextResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
+		m_vFinishPosition = m_vConeSetPositions[m_uNumConePositions - 1];
+	}
+	
+	// create spaceship
+	v3Position = m_vResetPosition;
+	m_pEntityMngr->AddEntity("AndyIsTheTeamArtist\\Spaceship.obj");
+	matrix4 m4Position = glm::translate(v3Position);
+	m_pEntityMngr->SetModelMatrix(m4Position);
+	m_eSpaceship = m_pEntityMngr->GetEntity(uIndex);
+	uIndex++;
+
+	// create octree
 	m_uOctantLevels = 1;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 	m_pEntityMngr->Update();
@@ -54,6 +59,8 @@ void Application::InitVariables(void)
 void Application::CreateTrafficConeRowAt(vector3 startPos, float span, float xPosDegreeAngle) {
 	CreateTrafficConeAt(vector3(startPos.x - span, startPos.y, startPos.z), vector3(0.2f));
 	CreateTrafficConeAt(vector3(startPos.x + span, startPos.y, startPos.z), vector3(0.2f));
+	m_vConeSetPositions[m_uNumConePositions] = startPos;
+	m_uNumConePositions++;
 }
 
 void Application::CreateTrafficConeAt(vector3 position, vector3 size) {
@@ -71,6 +78,31 @@ void Application::Update(void)
 
 	//Is the ArcBall active?
 	ArcBall();
+
+	// check for next race position
+	float nextRaceOffset = 1.5f;
+	if (glm::distance(v3Position, m_vNextResetPosition) < nextRaceOffset) {
+		m_vResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
+		m_uCurrentConeIndex++;
+		if (m_uCurrentConeIndex < m_uNumConePositions) m_vNextResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
+	}
+
+	// check bounds
+	vector3 halfWidth = m_eTrafficConesList[0]->GetRigidBody()->GetHalfWidth();
+	float offset = 1.5f;
+	float maxDistance = m_fConeSpan + halfWidth.x + offset;
+	if (glm::distance(v3Position, m_vResetPosition) > maxDistance) {
+		v3Position = m_vResetPosition;
+	}
+
+	// check reached finish (resets back to start for now)
+	if (m_vResetPosition == m_vFinishPosition) {
+		m_uCurrentConeIndex = 0;
+		v3Position = m_vConeSetPositions[m_uCurrentConeIndex];
+		m_vResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
+		m_uCurrentConeIndex++;
+		m_vNextResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
+	}
 
 	// move forward
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
@@ -100,7 +132,7 @@ void Application::Update(void)
 	matrix4 m4ModelMatrix = IDENTITY_M4;
 	m4ModelMatrix = glm::translate(m4ModelMatrix, v3Position);
 	m4ModelMatrix = glm::rotate(m4ModelMatrix, rot, glm::vec3(0, 1, 0));
-	m4ModelMatrix = glm::scale(m4ModelMatrix, vector3(2.0f, 2.0f, 2.0f));
+	m4ModelMatrix = glm::scale(m4ModelMatrix, vector3(1.0f, 1.0f, 1.0f));
 	
 	//sets matrix of the ship
 	m_eSpaceship->SetModelMatrix(m4ModelMatrix);
@@ -166,6 +198,7 @@ void Application::Release(void)
 	SafeDelete(m_pRoot);
 
 	delete m_eTrafficConesList;
+	delete m_vConeSetPositions;
 
 	//release GUI
 	ShutdownGUI();
