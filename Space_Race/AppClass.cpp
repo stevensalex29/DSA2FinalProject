@@ -82,7 +82,7 @@ void Application::Update(void)
 
 	Racetrack * firsttrack = racetrackList[0];
 
-	// ANDY - BREAKS WHEN GO BACKWARDS AT START AND FINISH FIRST LAP
+	// ANDY - CAMERA GETS MESSED UP WHEN GO BACKWARDS AT START AND STOPS RESETTING AFTER FIRST LAP
 
 	// check for next race position
 	vector3 halfWidth = firsttrack->m_eTrafficConesList[0]->GetRigidBody()->GetHalfWidth();
