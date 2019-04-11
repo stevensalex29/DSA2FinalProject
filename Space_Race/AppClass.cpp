@@ -71,6 +71,19 @@ void Simplex::Application::incrementuIndex()
 	uIndex += 1;
 }
 
+int Simplex::Application::ClosestPositionIndex()
+{
+	int curshortest = -1;
+	float curshortestdistance = 1000.0f;
+	for (int i = 0; i < racetrackList[0]->configuration->conelength; i++) {
+		if (curshortestdistance > glm::distance(racetrackList[0]->m_vConeSetPositions[i], v3Position)) {
+			curshortestdistance = glm::distance(racetrackList[0]->m_vConeSetPositions[i], v3Position);
+			curshortest = i;
+		}
+	}
+	return curshortest;
+}
+
 void Application::Update(void)
 {
 	//Update the system so it knows how much time has passed since the last call
@@ -82,49 +95,49 @@ void Application::Update(void)
 
 	Racetrack * firsttrack = racetrackList[0];
 
-	// ANDY - CAMERA GETS MESSED UP WHEN GO BACKWARDS AT START AND STOPS RESETTING AFTER FIRST LAP
-
-	// check for next race position
 	vector3 halfWidth = firsttrack->m_eTrafficConesList[0]->GetRigidBody()->GetHalfWidth();
 	float offset = 1.5f;
-	float nextRaceOffset = m_fConeSpan + halfWidth.x + offset;
-	if (glm::distance(v3Position, m_vNextResetPosition) < nextRaceOffset) {
-		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
-		m_uCurrentConeIndex++;
-		if (m_uCurrentConeIndex < firsttrack->m_uNumConePositions) m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
-		//if (m_bCircularTrackReset) m_bCircularTrackReset == false;
+	float maxDistance = m_fConeSpan + halfWidth.x + offset;
+
+	//find reset position
+	if (ClosestPositionIndex() > m_uCurrentConeIndex) {
+		m_vResetPosition = firsttrack->m_vConeSetPositions[ClosestPositionIndex()];
 	}
 
-	// check bounds
-	float maxDistance = m_fConeSpan + halfWidth.x + offset;
+	//check bounds
 	if (glm::distance(v3Position, m_vResetPosition) > maxDistance) {
-		m_uCurrentConeIndex -= 5;
+		m_uCurrentConeIndex -= 3;
 		if (m_uCurrentConeIndex < 0) {
 			m_uCurrentConeIndex = 0;
 		}
-		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
-		m_uCurrentConeIndex++;
-		if (m_uCurrentConeIndex < firsttrack->m_uNumConePositions) m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
-		//if(!m_bCircularTrackReset)
-		if(firsttrack->m_vConeSetPositions[0] == m_vResetPosition) v3Position = m_vNextResetPosition;
-		else v3Position = m_vResetPosition;
+		if (firsttrack->m_vConeSetPositions[0] == m_vResetPosition) {
+			v3Position = firsttrack->m_vConeSetPositions[1];
+		}
+		else {
+			v3Position = m_vResetPosition;
+		}
+		m_vResetPosition = firsttrack->m_vConeSetPositions[ClosestPositionIndex()];
 	}
+	m_uCurrentConeIndex = ClosestPositionIndex();
 
-	// check reached finish (resets back to start for now)
-	if (m_vResetPosition == m_vFinishPosition) {
-		m_uCurrentConeIndex = 0;
-		//if (!firsttrack->configuration->circularTrack)
-		v3Position = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
-		//else m_bCircularTrackReset = true;
-		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
-		m_uCurrentConeIndex++;
-		m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
-		// end timer, update best time
+	// check reached finish
+
+	if (oldIndex > 90 && m_uCurrentConeIndex < 10) {
 		end = std::chrono::steady_clock::now();
 		m_dLastTime = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 		if (m_dLastTime < m_dBestTime)m_dBestTime = m_dLastTime;
-		// reset timer and change track
+		//reset timer and change track
 		start = std::chrono::steady_clock::now();
+	}
+	oldIndex = m_uCurrentConeIndex;
+
+	if (m_uCurrentConeIndex == firsttrack->configuration->conelength && !lap) {
+		lap = true;
+		// end timer, update best time
+		
+	}
+	if (m_uCurrentConeIndex != firsttrack->configuration->conelength && lap) {
+		lap = false;
 	}
 
 	// update current time

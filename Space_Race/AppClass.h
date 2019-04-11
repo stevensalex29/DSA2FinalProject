@@ -52,6 +52,9 @@ public:
 	double m_dLastTime = std::numeric_limits<double>::max();
 	std::chrono::time_point<std::chrono::steady_clock> start;
 	std::chrono::time_point<std::chrono::steady_clock> end;
+	int ClosestPositionIndex();
+	bool lap = false;
+	int oldIndex = 0;
 
 private:
 	String m_sProgrammer = "GoodFolderMaterial"; //programmer
