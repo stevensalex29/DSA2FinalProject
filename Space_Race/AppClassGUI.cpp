@@ -20,7 +20,7 @@ void Application::DrawGUI(void)
 	if (m_dBestTime == std::numeric_limits<double>::max()) m_pMeshMngr->Print("Best Time: NaN\n");
 	else m_pMeshMngr->Print("Best Time: " + std::to_string((int)m_dBestTime) + "s\n");
 
-	m_pMeshMngr->PrintLine("0", C_RED);
+	//m_pMeshMngr->PrintLine("0", C_RED);
 
 	//m_pMeshMngr->Print("FPS:");
 	//m_pMeshMngr->PrintLine(std::to_string(m_pSystem->GetFPS()), C_RED);
