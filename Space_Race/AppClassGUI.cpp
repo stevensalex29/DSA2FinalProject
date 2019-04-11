@@ -49,6 +49,9 @@ void Application::DrawGUI(void)
 			ImGui::Text("Control:\n");
 			ImGui::Text("Arrow Keys - Move Spaceship\n");
 			ImGui::Separator();
+			ImGui::Text("Camera:\n");
+			ImGui::Text("Hold R - Camera Lookback\n");
+			ImGui::Separator();
 			ImGui::TextColored(v4Color2, m_pSystem->GetAppName().c_str());
 		}
 		ImGui::End();
