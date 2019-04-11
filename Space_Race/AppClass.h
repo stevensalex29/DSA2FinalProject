@@ -15,6 +15,10 @@ Date: 2017/06
 
 #include "MyOctant.h"
 #include <vector>
+#include <limits>
+#include <chrono>
+#include <string>
+
 
 namespace Simplex
 {
@@ -41,6 +45,11 @@ public:
 	bool m_bCircularTrackReset;
 	float rot = 0.0f;
 	uint uIndex = 0;
+	double m_dCurrentTime = 0;
+	double m_dBestTime = std::numeric_limits<double>::max();
+	double m_dLastTime = std::numeric_limits<double>::max();
+	std::chrono::time_point<std::chrono::steady_clock> start;
+	std::chrono::time_point<std::chrono::steady_clock> end;
 
 private:
 	String m_sProgrammer = "GoodFolderMaterial"; //programmer

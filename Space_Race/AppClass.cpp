@@ -1,4 +1,6 @@
 #include "AppClass.h"
+#include <chrono>
+
 using namespace Simplex;
 void Application::InitVariables(void)
 {
@@ -51,6 +53,9 @@ void Application::InitVariables(void)
 	m_uOctantLevels = 1;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 	m_pEntityMngr->Update();
+
+	// start timer
+	start = std::chrono::steady_clock::now();
 }
 
 MyEntityManager * Simplex::Application::getEntityManager()
@@ -74,7 +79,10 @@ void Application::Update(void)
 	//Is the ArcBall active?
 	ArcBall();
 
+
 	Racetrack * firsttrack = racetrackList[0];
+
+	// ANDY - BREAKS WHEN GO BACKWARDS AT START AND FINISH FIRST LAP
 
 	// check for next race position
 	vector3 halfWidth = firsttrack->m_eTrafficConesList[0]->GetRigidBody()->GetHalfWidth();
@@ -108,7 +116,17 @@ void Application::Update(void)
 		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 		m_uCurrentConeIndex++;
 		m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
+		// end timer, update best time
+		end = std::chrono::steady_clock::now();
+		m_dLastTime = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+		if (m_dLastTime < m_dBestTime)m_dBestTime = m_dLastTime;
+		// reset timer and change track
+		start = std::chrono::steady_clock::now();
 	}
+
+	// update current time
+	auto curr = std::chrono::steady_clock::now();
+	m_dCurrentTime = std::chrono::duration_cast<std::chrono::seconds>(curr-start).count();
 
 	// move forward
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))

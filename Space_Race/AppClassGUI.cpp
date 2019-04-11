@@ -9,7 +9,17 @@ void Application::DrawGUI(void)
 	for (uint i = 0; i < nEmptyLines; ++i)
 		m_pMeshMngr->PrintLine("");//Add a line on top
 
-	m_pMeshMngr->Print("Time Left:");
+	// display current time
+	m_pMeshMngr->Print("Current Time: " + std::to_string((int)m_dCurrentTime) + "s\n");
+
+	// display previous time
+	if(m_dLastTime == std::numeric_limits<double>::max()) m_pMeshMngr->Print("Previous Time: NaN\n");
+	else m_pMeshMngr->Print("Previous Time: " + std::to_string((int)m_dLastTime) + "s\n");
+
+	// display best time
+	if (m_dBestTime == std::numeric_limits<double>::max()) m_pMeshMngr->Print("Best Time: NaN\n");
+	else m_pMeshMngr->Print("Best Time: " + std::to_string((int)m_dBestTime) + "s\n");
+
 	m_pMeshMngr->PrintLine("0", C_RED);
 
 	//m_pMeshMngr->Print("FPS:");
