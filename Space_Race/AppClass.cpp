@@ -18,28 +18,23 @@ void Application::InitVariables(void)
 	uint uInstances = 1;
 #endif
 
+
 	// create traffic cones
-	m_eTrafficConesList = new MyEntity*[100];
-	m_vConeSetPositions = new vector3[100];
+	racetrackList = new Racetrack*[20];
+	racetrackList[0] = new Racetrack(&m_pEntityMngr, &uIndex);
+	Racetrack* firsttrack = racetrackList[0];
 	m_fConeSpan = 3.0f;
-	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 1.0f), 3.0f, 0.0f);
-	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 2.0f), 3.0f, 0.0f);
-	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 3.0f), 3.0f, 0.0f);
-	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 4.0f), 3.0f, 0.0f);
-	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 5.0f), 3.0f, 0.0f);
-	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 6.0f), 3.0f, 0.0f);
-	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 7.0f), 3.0f, 0.0f);
-	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 8.0f), 3.0f, 0.0f);
-	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 9.0f), 3.0f, 0.0f);
-	CreateTrafficConeRowAt(vector3(5.0f, 0.0f, 10.0f), 3.0f, 0.0f);
+
+	//firsttrack->CreateRaceTrackOf();
+	//vector3(0.0f, 0.0f, 0.0f), 100, 2.0f, 2.5f, glm::radians(3.6f), 0.0f, 0.0f
 
 	// set initial reset position, next reset position, and finish position
 
-	if (m_uNumConePositions > 0) {
-		m_vResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
+	if (firsttrack->m_uNumConePositions > 0) {
+		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 		m_uCurrentConeIndex++;
-		if (m_uCurrentConeIndex < m_uNumConePositions) m_vNextResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
-		m_vFinishPosition = m_vConeSetPositions[m_uNumConePositions - 1];
+		if (m_uCurrentConeIndex < firsttrack->m_uNumConePositions) m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
+		m_vFinishPosition = firsttrack->m_vConeSetPositions[firsttrack->m_uNumConePositions - 1];
 	}
 	
 	// create spaceship
@@ -56,19 +51,17 @@ void Application::InitVariables(void)
 	m_pEntityMngr->Update();
 }
 
-void Application::CreateTrafficConeRowAt(vector3 startPos, float span, float xPosDegreeAngle) {
-	CreateTrafficConeAt(vector3(startPos.x - span, startPos.y, startPos.z), vector3(0.2f));
-	CreateTrafficConeAt(vector3(startPos.x + span, startPos.y, startPos.z), vector3(0.2f));
-	m_vConeSetPositions[m_uNumConePositions] = startPos;
-	m_uNumConePositions++;
+MyEntityManager * Simplex::Application::getEntityManager()
+{
+	return m_pEntityMngr;
 }
-
-void Application::CreateTrafficConeAt(vector3 position, vector3 size) {
-	m_pEntityMngr->AddEntity("AndyIsTheTeamArtist\\TrafficCone.obj");
-	matrix4 trafficConeMatrix = glm::translate(position);
-	m_pEntityMngr->SetModelMatrix(trafficConeMatrix * glm::scale(size));
-	m_eTrafficConesList[uIndex] = m_pEntityMngr->GetEntity(uIndex);
-	uIndex++;
+int Simplex::Application::getuIndex()
+{
+	return uIndex;
+}
+void Simplex::Application::incrementuIndex()
+{
+	uIndex += 1;
 }
 
 void Application::Update(void)
@@ -79,16 +72,18 @@ void Application::Update(void)
 	//Is the ArcBall active?
 	ArcBall();
 
+	Racetrack * firsttrack = racetrackList[0];
+
 	// check for next race position
 	float nextRaceOffset = 1.5f;
 	if (glm::distance(v3Position, m_vNextResetPosition) < nextRaceOffset) {
-		m_vResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
+		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 		m_uCurrentConeIndex++;
-		if (m_uCurrentConeIndex < m_uNumConePositions) m_vNextResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
+		if (m_uCurrentConeIndex < firsttrack->m_uNumConePositions) m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 	}
 
 	// check bounds
-	vector3 halfWidth = m_eTrafficConesList[0]->GetRigidBody()->GetHalfWidth();
+	vector3 halfWidth = firsttrack->m_eTrafficConesList[0]->GetRigidBody()->GetHalfWidth();
 	float offset = 1.5f;
 	float maxDistance = m_fConeSpan + halfWidth.x + offset;
 	if (glm::distance(v3Position, m_vResetPosition) > maxDistance) {
@@ -98,10 +93,10 @@ void Application::Update(void)
 	// check reached finish (resets back to start for now)
 	if (m_vResetPosition == m_vFinishPosition) {
 		m_uCurrentConeIndex = 0;
-		v3Position = m_vConeSetPositions[m_uCurrentConeIndex];
-		m_vResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
+		v3Position = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
+		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 		m_uCurrentConeIndex++;
-		m_vNextResetPosition = m_vConeSetPositions[m_uCurrentConeIndex];
+		m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 	}
 
 	// move forward
@@ -197,8 +192,7 @@ void Application::Release(void)
 	// release the octree
 	SafeDelete(m_pRoot);
 
-	delete m_eTrafficConesList;
-	delete m_vConeSetPositions;
+	delete racetrackList;
 
 	//release GUI
 	ShutdownGUI();

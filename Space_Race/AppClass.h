@@ -10,6 +10,9 @@ Date: 2017/06
 #include "ControllerConfiguration.h"
 #include "imgui\ImGuiObject.h"
 
+#include "Racetrack.h"
+#include "RacetrackConfiguration.h"
+
 #include "MyOctant.h"
 #include <vector>
 
@@ -18,15 +21,16 @@ namespace Simplex
 	//Adding Application to the Simplex namespace
 class Application
 {
+
+public:
+
 	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager
 	MyEntity* m_eSpaceship = nullptr; // Represents the player spaceship
-	MyEntity** m_eTrafficConesList;
-	vector3* m_vConeSetPositions;
+	Racetrack** racetrackList = nullptr;
 	vector3 m_vResetPosition;
 	vector3 m_vNextResetPosition;
 	vector3 m_vFinishPosition;
 	uint m_uCurrentConeIndex = 0;
-	uint m_uNumConePositions = 0;
 	float m_fConeSpan;
 	MyOctant* m_pRoot = nullptr; // Root of the octree
 	uint m_uOctantID = -1; //Index of Octant to display
@@ -93,6 +97,11 @@ public:
 	-	bool a_bBorderless = false -> is the window borderless?
 	OUTPUT: ---
 	*/
+
+	MyEntityManager* getEntityManager();
+	int getuIndex();
+	void incrementuIndex();
+
 	void Init(String a_sApplicationName = "", int a_uSize = BTO_RESOLUTIONS::RES_C_1280x720_16x9_HD,
 		bool a_bFullscreen = false, bool a_bBorderless = false);
 	/*
@@ -135,16 +144,6 @@ private:
 	OUTPUT: ---
 	*/
 	void InitVariables(void);
-	/*
-	USAGE: Creates a row of (two) traffic cones at a position. The span is the radius of how far apart the
-	traffic cones are from each other. The xPosDegreeAngle is the rotation along the x axis that the span is.
-	*/
-	void CreateTrafficConeRowAt(vector3 startPos, float span, float xPosDegreeAngle);
-	/*
-	USAGE: Creates a traffic cone object and adds it to the entity manager.
-	ARGUMENTS: position, size. These attributes apply directly to the traffic cone model and bounding box.
-	*/
-	void CreateTrafficConeAt(vector3 position, vector3 size);
 	/*
 	USAGE: Reads the configuration of the application to a file
 	ARGUMENTS: ---

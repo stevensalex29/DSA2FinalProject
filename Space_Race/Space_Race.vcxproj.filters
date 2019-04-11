@@ -57,6 +57,12 @@
     <ClCompile Include="MyOctant.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Racetrack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RacetrackConfiguration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -96,6 +102,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MyOctant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Racetrack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RacetrackConfiguration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

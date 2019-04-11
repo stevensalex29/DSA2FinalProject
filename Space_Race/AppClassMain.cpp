@@ -186,6 +186,7 @@ void Application::Reshape(void)
 	glViewport(0, 0, size.x, size.y);
 	m_pMeshMngr->SetRenderTarget(0, 0, 0, size.x, size.y);
 }
+
 void Application::Init(String a_sApplicationName, int a_uSize, bool a_bFullscreen, bool a_bBorderless)
 {
 	static bool bInitializated = false;
