@@ -12,6 +12,19 @@ RacetrackConfiguration::RacetrackConfiguration()
 	variance = glm::radians(3.6f);
 	boundX = 0.0f;
 	boundZ = 0.0f;
+	randomsection = 10;
+}
+
+RacetrackConfiguration::RacetrackConfiguration(vector3 startPos, int conelength, float basespan, float variance, float boundX, float boundY, int randomsection = 10)
+{
+	this->startPos = startPos;
+	this->conelength = conelength;
+	this->conespacing = conespacing;
+	this->basespan = basespan;
+	this->variance = variance;
+	this->boundX = boundX;
+	this->boundX = boundY;
+	this->randomsection = randomsection;
 }
 
 

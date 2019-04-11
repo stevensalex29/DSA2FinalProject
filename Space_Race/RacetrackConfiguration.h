@@ -14,9 +14,11 @@ namespace Simplex {
 	variance: how quickly the racetrack changes.
 	boundX: how big on the X component the track should try to fit into.
 	boundZ: how big on the Z component the track should try to fit into.
+	randomsection: how many cone sets to do before moving on to another random piece of road.
 	*/
 	public:
 		RacetrackConfiguration();
+		RacetrackConfiguration(vector3 startPos, int conelength, float basespan, float variance, float boundX, float boundY, int randomsection);
 		~RacetrackConfiguration();
 		vector3 startPos;
 		int conelength;
@@ -25,6 +27,7 @@ namespace Simplex {
 		float variance;
 		float boundX;
 		float boundZ;
+		int randomsection;
 	};
 }
 

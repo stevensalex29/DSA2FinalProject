@@ -23,6 +23,7 @@ void Application::InitVariables(void)
 	racetrackList = new Racetrack*[20];
 	racetrackList[0] = new Racetrack(&m_pEntityMngr, &uIndex);
 	Racetrack* firsttrack = racetrackList[0];
+	firsttrack->CreateRaceTrackOf(*(firsttrack->configuration));
 	m_fConeSpan = 3.0f;
 
 	//firsttrack->CreateRaceTrackOf();

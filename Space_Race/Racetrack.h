@@ -18,6 +18,11 @@ namespace Simplex {
 
 		Racetrack(MyEntityManager** m_ent, uint* uIndex);
 		~Racetrack();
+		/*
+		USAGE: Creates a randomized? racetrack from the configuration provided. Usually the racetrack's own configuration
+		is used, but any config from any racetrack can be used to create the course.
+		ARGUMENTS: Just the config. Details of what the variables in the config are provided in RacetrackConfiguration.h.
+		*/
 		void CreateRaceTrackOf(RacetrackConfiguration config);
 		/*
 		USAGE: Creates a row of (two) traffic cones at a position. The span is the radius of how far apart the

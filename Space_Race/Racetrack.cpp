@@ -10,7 +10,6 @@ Racetrack::Racetrack(MyEntityManager ** m_ent, uint* uIndex)
 	configuration = new RacetrackConfiguration();
 	this->uIndex = uIndex;
 	this->m_ent = *m_ent;
-	CreateRaceTrackOf(*configuration);
 }
 
 Racetrack::~Racetrack()
