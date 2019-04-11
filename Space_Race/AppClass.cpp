@@ -90,6 +90,13 @@ void Application::Update(void)
 	// check bounds
 	float maxDistance = m_fConeSpan + halfWidth.x + offset;
 	if (glm::distance(v3Position, m_vResetPosition) > maxDistance) {
+		m_uCurrentConeIndex -= 5;
+		if (m_uCurrentConeIndex < 0) {
+			m_uCurrentConeIndex = 0;
+		}
+		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
+		m_uCurrentConeIndex++;
+		if (m_uCurrentConeIndex < firsttrack->m_uNumConePositions) m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 		if(!m_bCircularTrackReset)v3Position = m_vResetPosition;
 	}
 
