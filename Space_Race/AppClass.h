@@ -38,7 +38,7 @@ public:
 	uint m_uOctantLevels = 0; //Number of levels in the octree
 	vector3 v3Position;
 	vector3 v3Center;
-
+	bool m_bCircularTrackReset;
 	float rot = 0.0f;
 	uint uIndex = 0;
 

@@ -18,7 +18,7 @@ namespace Simplex {
 	*/
 	public:
 		RacetrackConfiguration();
-		RacetrackConfiguration(vector3 startPos, int conelength, float basespan, float variance, float boundX, float boundY, int randomsection);
+		RacetrackConfiguration(vector3 startPos, int conelength, float basespan, float variance, float boundX, float boundY, int randomsection, bool circularTrack);
 		~RacetrackConfiguration();
 		vector3 startPos;
 		int conelength;
@@ -28,6 +28,7 @@ namespace Simplex {
 		float boundX;
 		float boundZ;
 		int randomsection;
+		bool circularTrack;
 	};
 }
 

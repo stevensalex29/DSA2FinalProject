@@ -13,9 +13,10 @@ RacetrackConfiguration::RacetrackConfiguration()
 	boundX = 0.0f;
 	boundZ = 0.0f;
 	randomsection = 10;
+	circularTrack = true;
 }
 
-RacetrackConfiguration::RacetrackConfiguration(vector3 startPos, int conelength, float basespan, float variance, float boundX, float boundY, int randomsection = 10)
+RacetrackConfiguration::RacetrackConfiguration(vector3 startPos, int conelength, float basespan, float variance, float boundX, float boundY, int randomsection = 10, bool circularTrack = false)
 {
 	this->startPos = startPos;
 	this->conelength = conelength;
@@ -25,6 +26,7 @@ RacetrackConfiguration::RacetrackConfiguration(vector3 startPos, int conelength,
 	this->boundX = boundX;
 	this->boundX = boundY;
 	this->randomsection = randomsection;
+	this->circularTrack = circularTrack;
 }
 
 

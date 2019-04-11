@@ -23,8 +23,9 @@ void Application::InitVariables(void)
 	racetrackList = new Racetrack*[20];
 	racetrackList[0] = new Racetrack(&m_pEntityMngr, &uIndex);
 	Racetrack* firsttrack = racetrackList[0];
+	firsttrack->configuration->basespan = 6.0f;
 	firsttrack->CreateRaceTrackOf(*(firsttrack->configuration));
-	m_fConeSpan = 3.0f;
+	m_fConeSpan = firsttrack->configuration->basespan;
 
 	//firsttrack->CreateRaceTrackOf();
 	//vector3(0.0f, 0.0f, 0.0f), 100, 2.0f, 2.5f, glm::radians(3.6f), 0.0f, 0.0f
@@ -76,25 +77,27 @@ void Application::Update(void)
 	Racetrack * firsttrack = racetrackList[0];
 
 	// check for next race position
-	float nextRaceOffset = 1.5f;
+	vector3 halfWidth = firsttrack->m_eTrafficConesList[0]->GetRigidBody()->GetHalfWidth();
+	float offset = 1.5f;
+	float nextRaceOffset = m_fConeSpan + halfWidth.x + offset;
 	if (glm::distance(v3Position, m_vNextResetPosition) < nextRaceOffset) {
 		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 		m_uCurrentConeIndex++;
 		if (m_uCurrentConeIndex < firsttrack->m_uNumConePositions) m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
+		if (m_bCircularTrackReset) m_bCircularTrackReset == false;
 	}
 
 	// check bounds
-	vector3 halfWidth = firsttrack->m_eTrafficConesList[0]->GetRigidBody()->GetHalfWidth();
-	float offset = 1.5f;
 	float maxDistance = m_fConeSpan + halfWidth.x + offset;
 	if (glm::distance(v3Position, m_vResetPosition) > maxDistance) {
-		v3Position = m_vResetPosition;
+		if(!m_bCircularTrackReset)v3Position = m_vResetPosition;
 	}
 
 	// check reached finish (resets back to start for now)
 	if (m_vResetPosition == m_vFinishPosition) {
 		m_uCurrentConeIndex = 0;
-		v3Position = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
+		if (!firsttrack->configuration->circularTrack)v3Position = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
+		else m_bCircularTrackReset = true;
 		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 		m_uCurrentConeIndex++;
 		m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
