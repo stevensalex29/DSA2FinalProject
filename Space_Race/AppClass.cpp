@@ -92,7 +92,7 @@ void Application::Update(void)
 		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 		m_uCurrentConeIndex++;
 		if (m_uCurrentConeIndex < firsttrack->m_uNumConePositions) m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
-		if (m_bCircularTrackReset) m_bCircularTrackReset == false;
+		//if (m_bCircularTrackReset) m_bCircularTrackReset == false;
 	}
 
 	// check bounds
@@ -105,14 +105,17 @@ void Application::Update(void)
 		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 		m_uCurrentConeIndex++;
 		if (m_uCurrentConeIndex < firsttrack->m_uNumConePositions) m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
-		if(!m_bCircularTrackReset)v3Position = m_vResetPosition;
+		//if(!m_bCircularTrackReset)
+		if(firsttrack->m_vConeSetPositions[0] == m_vResetPosition) v3Position = m_vNextResetPosition;
+		else v3Position = m_vResetPosition;
 	}
 
 	// check reached finish (resets back to start for now)
 	if (m_vResetPosition == m_vFinishPosition) {
 		m_uCurrentConeIndex = 0;
-		if (!firsttrack->configuration->circularTrack)v3Position = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
-		else m_bCircularTrackReset = true;
+		//if (!firsttrack->configuration->circularTrack)
+		v3Position = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
+		//else m_bCircularTrackReset = true;
 		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
 		m_uCurrentConeIndex++;
 		m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
