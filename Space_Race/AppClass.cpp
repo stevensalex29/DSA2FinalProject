@@ -131,31 +131,31 @@ void Application::Update(void)
 	// move forward
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		v3Position += vector3(0.5f, 0.0f, 0.5f) * vector3(sin(rot), 0, cos(rot));
+		v3Position += vector3(0.5f, 0.0f, 0.5f) * vector3(sin(shipRot), 0, cos(shipRot));
 	}
 
 	// move backward
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		v3Position += vector3(-0.5f, 0.0f, -0.5f) * vector3(sin(rot), 0, cos(rot));
+		v3Position += vector3(-0.5f, 0.0f, -0.5f) * vector3(sin(shipRot), 0, cos(shipRot));
 	}
 
 	// steer left
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		rot += 0.05f;
+		shipRot += 0.05f;
 	}
 
 	// steer right
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		rot -= 0.05f;
+		shipRot -= 0.05f;
 	}
 
 	// create the model matrix with position, rotation, and scale
 	matrix4 m4ModelMatrix = IDENTITY_M4;
 	m4ModelMatrix = glm::translate(m4ModelMatrix, v3Position);
-	m4ModelMatrix = glm::rotate(m4ModelMatrix, rot, glm::vec3(0, 1, 0));
+	m4ModelMatrix = glm::rotate(m4ModelMatrix, shipRot, glm::vec3(0, 1, 0));
 	m4ModelMatrix = glm::scale(m4ModelMatrix, vector3(1.0f, 1.0f, 1.0f));
 	
 	//sets matrix of the ship
@@ -163,11 +163,47 @@ void Application::Update(void)
 
 	vector3 camPos;
 
+	desiredCameraRot = shipRot;
+
+	// Reverse Camera
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+	{
+		desiredCameraRot += 3.14159f;
+	}
+
+	if (cameraRot > desiredCameraRot)
+	{
+		if (abs(desiredCameraRot - cameraRot) >= 1.0f)
+		{
+			cameraRot -= 0.10f; // spin fast if you have a big difference
+		}
+
+		else
+		{
+			// spin slow if it is a small difference
+			cameraRot -= 0.04f; // a little slower than ship's angular velocity
+		}
+	}
+
+	if (cameraRot < desiredCameraRot)
+	{
+		if (abs(desiredCameraRot - cameraRot) >= 1.0f)
+		{
+			cameraRot += 0.10f; // spin fast if you have a big difference
+		}
+
+		else
+		{
+			// spin slow if it is a small difference
+			cameraRot += 0.04f; // a little slower than ship's angular velocity
+		}
+	}
+
 	// follow the ship
 	camPos = vector3(
-		v3Position.x - 5 * sin(rot),
+		v3Position.x - 5 * sin(cameraRot),
 		v3Position.y + 2,
-		v3Position.z - 5 * cos(rot)
+		v3Position.z - 5 * cos(cameraRot)
 	);
 
 	// stay in center of screen

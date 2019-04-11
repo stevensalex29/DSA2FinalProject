@@ -43,7 +43,9 @@ public:
 	vector3 v3Position;
 	vector3 v3Center;
 	bool m_bCircularTrackReset;
-	float rot = 0.0f;
+	float shipRot = 0.0f;
+	float cameraRot = 0.0f;
+	float desiredCameraRot = 0.0f;
 	uint uIndex = 0;
 	double m_dCurrentTime = 0;
 	double m_dBestTime = std::numeric_limits<double>::max();
