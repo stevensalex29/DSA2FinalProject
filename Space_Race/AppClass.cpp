@@ -1,6 +1,21 @@
 #include "AppClass.h"
 #include <chrono>
 
+using namespace std;
+fstream file;
+int numberFramesWritten = 0;
+int numberFramesRead = 0;
+bool writing = false;
+bool reading = false;
+
+struct
+{
+	float posX;
+	float posY;
+	float posZ;
+	float rot;
+} shipRecordData[9999];
+
 using namespace Simplex;
 void Application::InitVariables(void)
 {
@@ -166,6 +181,75 @@ void Application::Update(void)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
 		shipRot -= 0.05f;
+	}
+
+	// start writing
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+	{
+		numberFramesWritten = 0;
+		numberFramesRead = 0;
+		writing = true;
+		reading = false;
+	}
+
+	// start reading
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+	{
+		numberFramesWritten = 0;
+		numberFramesRead = 0;
+		writing = false;
+		reading = true;
+		file.open("shipData.dat", ios::in | ios::binary);
+
+		//source\repos\DSA2FinalProject\_Binary\shipData.dat
+
+		file.read(reinterpret_cast<char*>(&shipRecordData[0]), sizeof(shipRecordData[0]) * 9999);
+		file.close();
+	}
+
+	// stop reading and writing
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::I))
+	{
+		if (writing)
+		{
+			printf("Writing...\n");
+			file.open("shipData.dat", ios::out | ios::binary);
+
+			//source\repos\DSA2FinalProject\_Binary\shipData.dat
+			file.write(reinterpret_cast<char*>(&shipRecordData[0]), sizeof(shipRecordData[0]) * 9999);
+			file.close();
+		}
+
+		numberFramesWritten = 0;
+		numberFramesRead = 0;
+		writing = false;
+		reading = false;
+	}
+
+	if (writing)
+	{
+		shipRecordData[numberFramesWritten].posX = v3Position.x;
+		shipRecordData[numberFramesWritten].posY = v3Position.y;
+		shipRecordData[numberFramesWritten].posZ = v3Position.z;
+		shipRecordData[numberFramesWritten].rot = shipRot;
+
+		numberFramesWritten++;
+
+		printf("recording\n");
+	}
+
+	if (reading)
+	{
+		v3Position.x = shipRecordData[numberFramesRead].posX;
+		v3Position.y = shipRecordData[numberFramesRead].posY;
+		v3Position.z = shipRecordData[numberFramesRead].posZ;
+		shipRot = shipRecordData[numberFramesRead].rot;
+
+		printf("%f %f %f\n", v3Position.x, v3Position.y, v3Position.z);
+
+		numberFramesRead++;
+
+		printf("Hello WOrld\n");
 	}
 
 	// create the model matrix with position, rotation, and scale

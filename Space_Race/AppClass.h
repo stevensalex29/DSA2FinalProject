@@ -18,6 +18,7 @@ Date: 2017/06
 #include <limits>
 #include <chrono>
 #include <string>
+#include <fstream>
 
 
 namespace Simplex
