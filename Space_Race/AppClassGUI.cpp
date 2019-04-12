@@ -46,11 +46,16 @@ void Application::DrawGUI(void)
 				ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 			ImGui::Text("Objects: %d\n", m_uObjects);
 			ImGui::Separator();
-			ImGui::Text("Control:\n");
+			ImGui::Text("Controls:\n");
 			ImGui::Text("Arrow Keys - Move Spaceship\n");
 			ImGui::Separator();
-			ImGui::Text("Camera:\n");
+			ImGui::Text("Camera Movement:\n");
 			ImGui::Text("Hold R - Camera Lookback\n");
+			ImGui::Separator();
+			ImGui::Text("Extra Features:\n");
+			ImGui::Text("O - Record Player Movement\n");
+			ImGui::Text("I - Stop Playback/Recording\n");
+			ImGui::Text("P - Replay Player Movement\n");
 			ImGui::Separator();
 			ImGui::TextColored(v4Color2, m_pSystem->GetAppName().c_str());
 		}
