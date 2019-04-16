@@ -256,6 +256,7 @@ void Application::Update(void)
 	matrix4 m4ModelMatrix = IDENTITY_M4;
 	m4ModelMatrix = glm::translate(m4ModelMatrix, v3Position);
 	m4ModelMatrix = glm::rotate(m4ModelMatrix, shipRot, glm::vec3(0, 1, 0));
+	m4ModelMatrix = glm::rotate(m4ModelMatrix, shipRot, glm::vec3(0, 0, -1));
 	m4ModelMatrix = glm::scale(m4ModelMatrix, vector3(1.0f, 1.0f, 1.0f));
 	
 	//sets matrix of the ship
