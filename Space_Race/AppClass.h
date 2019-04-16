@@ -31,6 +31,7 @@ public:
 
 	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager
 	MyEntity* m_eSpaceship = nullptr; // Represents the player spaceship
+	MyEntity* m_eSpaceshipGhost = nullptr; // Represents the ghost spaceship
 	Racetrack** racetrackList = nullptr;
 	vector3 m_vResetPosition;
 	vector3 m_vNextResetPosition;
@@ -42,9 +43,11 @@ public:
 	uint m_uObjects = 0; //Number of objects in the scene
 	uint m_uOctantLevels = 0; //Number of levels in the octree
 	vector3 v3Position;
+	vector3 v3PositionGhost; // for replaying level recordings
 	vector3 v3Center;
 	bool m_bCircularTrackReset;
 	float shipRot = 0.0f;
+	float shipRotGhost = 0.0f; // for replaying level recordings
 	float cameraRot = 0.0f;
 	float desiredCameraRot = 0.0f;
 	uint uIndex = 0;

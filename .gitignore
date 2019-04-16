@@ -39,3 +39,10 @@ Z_DELETE
 *.db
 .vs/
 _Binary/*_d.ini
+/_Binary/shipData7.dat
+/_Binary/shipData6.dat
+/_Binary/shipData5.dat
+/_Binary/shipData4.dat
+/_Binary/shipData3.dat
+/_Binary/shipData2.dat
+/_Binary/shipData1.dat
