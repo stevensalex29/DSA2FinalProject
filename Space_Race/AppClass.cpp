@@ -2,7 +2,8 @@
 #include <chrono>
 
 using namespace std;
-fstream file;
+fstream readFile;
+fstream writeFile;
 int numberFramesWritten = 0;
 int numberFramesRead = 0;
 bool writing = false;
@@ -15,7 +16,8 @@ struct
 	float posY;
 	float posZ;
 	float rot;
-} shipRecordData[9999];
+
+} shipWriteData[9999], shipReadData[9999];
 
 using namespace Simplex;
 void Application::InitVariables(void)
@@ -66,6 +68,14 @@ void Application::InitVariables(void)
 	matrix4 m4Position = glm::translate(v3Position);
 	m_pEntityMngr->SetModelMatrix(m4Position);
 	m_eSpaceship = m_pEntityMngr->GetEntity(uIndex);
+	uIndex++;
+
+	// create another spaceship for viewing recordings of other laps
+	v3PositionGhost = vector3(0, -99, 0); // start before starting line, like Mario Kart
+	m_pEntityMngr->AddEntity("AndyIsTheTeamArtist\\Spaceship.obj");
+	matrix4 m4PositionGhost = glm::translate(v3PositionGhost);
+	m_pEntityMngr->SetModelMatrix(m4PositionGhost);
+	m_eSpaceshipGhost = m_pEntityMngr->GetEntity(uIndex);
 	uIndex++;
 
 	// create octree
@@ -140,7 +150,6 @@ void Application::Update(void)
 	m_uCurrentConeIndex = ClosestPositionIndex();
 
 	// check reached finish
-
 	if (oldIndex > 90 && m_uCurrentConeIndex < 10) {
 		end = std::chrono::steady_clock::now();
 		
@@ -151,10 +160,59 @@ void Application::Update(void)
 			if (m_dLastTime < m_dBestTime)m_dBestTime = m_dLastTime;
 		}
 
-		lapNumber++;
-
 		//reset timer and change track
 		start = std::chrono::steady_clock::now();
+
+		lapNumber++;
+		numberFramesWritten = 0;
+		numberFramesRead = 0;
+
+		if (lapNumber >= 1)
+		{
+			writing = true;
+		}
+
+		/*
+		
+		READ ME
+
+		This system of managing read and write assumes
+		that this particular race is the first race you've ever done
+
+		If you want it to read data from a previous race,
+		that code comes later
+		
+		*/
+
+		// start reading file if you are on lap 2 or more
+		if (lapNumber >= 2)
+		{
+			reading = true;
+
+			// assuming this is your first race ever
+			// write the lap you just finished (previous lap)
+			if (writing)
+			{
+				char filename[100];
+				sprintf_s(filename, 99, "shipData%i.dat", lapNumber-1);
+				writeFile.open(filename, ios::out | ios::binary);
+				//source\repos\DSA2FinalProject\_Binary\shipData.dat
+
+				writeFile.write(reinterpret_cast<char*>(&shipWriteData[0]), sizeof(shipWriteData[0]) * 9999);
+				writeFile.close();
+			}
+
+			// assuming this is your first race ever
+			// read the lap you just finished (previous lap)
+			char filename[100];
+			sprintf_s(filename, 99, "shipData%i.dat", lapNumber-1);
+			readFile.open("shipData.dat", ios::in | ios::binary);
+			//source\repos\DSA2FinalProject\_Binary\shipData.dat
+
+			readFile.read(reinterpret_cast<char*>(&shipReadData[0]), sizeof(shipReadData[0]) * 9999);
+			readFile.close();
+		}
+
 	}
 	oldIndex = m_uCurrentConeIndex;
 
@@ -209,46 +267,12 @@ void Application::Update(void)
 		reading = false;
 	}
 
-	// start reading
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-	{
-		numberFramesWritten = 0;
-		numberFramesRead = 0;
-		writing = false;
-		reading = true;
-		file.open("shipData.dat", ios::in | ios::binary);
-
-		//source\repos\DSA2FinalProject\_Binary\shipData.dat
-
-		file.read(reinterpret_cast<char*>(&shipRecordData[0]), sizeof(shipRecordData[0]) * 9999);
-		file.close();
-	}
-
-	// stop reading and writing
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::I))
-	{
-		if (writing)
-		{
-			printf("Writing...\n");
-			file.open("shipData.dat", ios::out | ios::binary);
-
-			//source\repos\DSA2FinalProject\_Binary\shipData.dat
-			file.write(reinterpret_cast<char*>(&shipRecordData[0]), sizeof(shipRecordData[0]) * 9999);
-			file.close();
-		}
-
-		numberFramesWritten = 0;
-		numberFramesRead = 0;
-		writing = false;
-		reading = false;
-	}
-
 	if (writing)
 	{
-		shipRecordData[numberFramesWritten].posX = v3Position.x;
-		shipRecordData[numberFramesWritten].posY = v3Position.y;
-		shipRecordData[numberFramesWritten].posZ = v3Position.z;
-		shipRecordData[numberFramesWritten].rot = shipRot;
+		shipWriteData[numberFramesWritten].posX = v3Position.x;
+		shipWriteData[numberFramesWritten].posY = v3Position.y;
+		shipWriteData[numberFramesWritten].posZ = v3Position.z;
+		shipWriteData[numberFramesWritten].rot = shipRot;
 
 		numberFramesWritten++;
 
@@ -257,16 +281,12 @@ void Application::Update(void)
 
 	if (reading)
 	{
-		v3Position.x = shipRecordData[numberFramesRead].posX;
-		v3Position.y = shipRecordData[numberFramesRead].posY;
-		v3Position.z = shipRecordData[numberFramesRead].posZ;
-		shipRot = shipRecordData[numberFramesRead].rot;
-
-		printf("%f %f %f\n", v3Position.x, v3Position.y, v3Position.z);
+		v3PositionGhost.x = shipReadData[numberFramesRead].posX;
+		v3PositionGhost.y = shipReadData[numberFramesRead].posY;
+		v3PositionGhost.z = shipReadData[numberFramesRead].posZ;
+		shipRotGhost = shipReadData[numberFramesRead].rot;
 
 		numberFramesRead++;
-
-		printf("Hello WOrld\n");
 	}
 
 	// create the model matrix with position, rotation, and scale
@@ -275,9 +295,14 @@ void Application::Update(void)
 	m4ModelMatrix = glm::rotate(m4ModelMatrix, shipRot, glm::vec3(0, 1, 0));
 	m4ModelMatrix = glm::rotate(m4ModelMatrix, cameraRot - shipRot, glm::vec3(0, 0, 1));
 	m4ModelMatrix = glm::scale(m4ModelMatrix, vector3(1.0f, 1.0f, 1.0f));
-	
-	//sets matrix of the ship
 	m_eSpaceship->SetModelMatrix(m4ModelMatrix);
+
+	// set matrix of the ghost ship
+	m4ModelMatrix = IDENTITY_M4;
+	m4ModelMatrix = glm::translate(m4ModelMatrix, v3PositionGhost);
+	m4ModelMatrix = glm::rotate(m4ModelMatrix, shipRotGhost, glm::vec3(0, 1, 0));
+	m4ModelMatrix = glm::scale(m4ModelMatrix, vector3(1.0f, 1.0f, 1.0f));
+	m_eSpaceshipGhost->SetModelMatrix(m4ModelMatrix);
 
 	vector3 camPos;
 
