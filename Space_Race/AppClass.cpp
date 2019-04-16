@@ -206,7 +206,7 @@ void Application::Update(void)
 			// read the lap you just finished (previous lap)
 			char filename[100];
 			sprintf_s(filename, 99, "shipData%i.dat", lapNumber-1);
-			readFile.open("shipData.dat", ios::in | ios::binary);
+			readFile.open(filename, ios::in | ios::binary);
 			//source\repos\DSA2FinalProject\_Binary\shipData.dat
 
 			readFile.read(reinterpret_cast<char*>(&shipReadData[0]), sizeof(shipReadData[0]) * 9999);
