@@ -7,6 +7,7 @@ int numberFramesWritten = 0;
 int numberFramesRead = 0;
 bool writing = false;
 bool reading = false;
+int lapNumber = 0;
 
 struct
 {
@@ -56,8 +57,11 @@ void Application::InitVariables(void)
 		m_vFinishPosition = firsttrack->m_vConeSetPositions[firsttrack->m_uNumConePositions - 1];
 	}
 	
+	// in a 3-lap race, the laps are 1, 2, 3
+	lapNumber = 0;
+
 	// create spaceship
-	v3Position = m_vResetPosition;
+	v3Position = vector3(0,0,-10); // start before starting line, like Mario Kart
 	m_pEntityMngr->AddEntity("AndyIsTheTeamArtist\\Spaceship.obj");
 	matrix4 m4Position = glm::translate(v3Position);
 	m_pEntityMngr->SetModelMatrix(m4Position);
@@ -139,8 +143,16 @@ void Application::Update(void)
 
 	if (oldIndex > 90 && m_uCurrentConeIndex < 10) {
 		end = std::chrono::steady_clock::now();
-		m_dLastTime = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
-		if (m_dLastTime < m_dBestTime)m_dBestTime = m_dLastTime;
+		
+		// if race has not started yet
+		if (lapNumber != 0)
+		{
+			m_dLastTime = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+			if (m_dLastTime < m_dBestTime)m_dBestTime = m_dLastTime;
+		}
+
+		lapNumber++;
+
 		//reset timer and change track
 		start = std::chrono::steady_clock::now();
 	}
@@ -157,7 +169,12 @@ void Application::Update(void)
 
 	// update current time
 	auto curr = std::chrono::steady_clock::now();
-	m_dCurrentTime = std::chrono::duration_cast<std::chrono::seconds>(curr-start).count();
+
+	// if race has not started
+	if (lapNumber != 0)
+	{
+		m_dCurrentTime = std::chrono::duration_cast<std::chrono::seconds>(curr - start).count();
+	}
 
 	// move forward
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
