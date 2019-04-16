@@ -116,6 +116,7 @@ public:
 	MyEntityManager* getEntityManager();
 	int getuIndex();
 	void incrementuIndex();
+	void doCollisionStuffs();
 
 	void Init(String a_sApplicationName = "", int a_uSize = BTO_RESOLUTIONS::RES_C_1280x720_16x9_HD,
 		bool a_bFullscreen = false, bool a_bBorderless = false);

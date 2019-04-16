@@ -99,6 +99,28 @@ int Simplex::Application::ClosestPositionIndex()
 	return curshortest;
 }
 
+void Application::doCollisionStuffs() {
+	Racetrack * firsttrack = racetrackList[0];
+	for (int i = 0; i < firsttrack->configuration->conelength * 2; i++) {
+		if (firsttrack->m_eTrafficConesList[i]->IsColliding(m_eSpaceship)) {
+			firsttrack->m_eTrafficConesList[i]->curvel += vector3(2.5f, 0.0f, 2.5f) * vector3(sin(shipRot), 0, cos(shipRot));
+		}
+		if (glm::length(firsttrack->m_eTrafficConesList[i]->curvel) > 0.0f) {
+			for (int j = i; j < firsttrack->configuration->conelength * 2; j++) {
+				//j = i: so that we don't recheck cones and infinitely multiply the distance
+				if (firsttrack->m_eTrafficConesList[j]->IsColliding(firsttrack->m_eTrafficConesList[i])) {
+					firsttrack->m_eTrafficConesList[j]->curvel += vector3(1.5f, 0.0f, 1.5f) * firsttrack->m_eTrafficConesList[i]->curvel;
+					firsttrack->m_eTrafficConesList[i]->curvel *= .4f;
+				}
+			}
+		}
+	}
+	for (int i = 0; i < firsttrack->configuration->conelength * 2; i++) {
+		firsttrack->m_eTrafficConesList[i]->SetModelMatrix(glm::translate(firsttrack->m_eTrafficConesList[i]->GetModelMatrix(), firsttrack->m_eTrafficConesList[i]->curvel));
+		firsttrack->m_eTrafficConesList[i]->curvel = firsttrack->m_eTrafficConesList[i]->curvel * 0.98f;
+	}
+}
+
 void Application::Update(void)
 {
 	//Update the system so it knows how much time has passed since the last call
@@ -109,6 +131,8 @@ void Application::Update(void)
 
 
 	Racetrack * firsttrack = racetrackList[0];
+
+	doCollisionStuffs();
 
 	vector3 halfWidth = firsttrack->m_eTrafficConesList[0]->GetRigidBody()->GetHalfWidth();
 	float offset = 1.5f;

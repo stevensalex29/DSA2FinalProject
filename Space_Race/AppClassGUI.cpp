@@ -53,9 +53,10 @@ void Application::DrawGUI(void)
 			ImGui::Text("Hold R - Camera Lookback\n");
 			ImGui::Separator();
 			ImGui::Text("Extra Features:\n");
-			ImGui::Text("O - Record Player Movement\n");
-			ImGui::Text("I - Stop Playback/Recording\n");
-			ImGui::Text("P - Replay Player Movement\n");
+			ImGui::Text("Automatic replay after laps\n");
+			//ImGui::Text("O - Record Player Movement\n");
+			//ImGui::Text("I - Stop Playback/Recording\n");
+			//ImGui::Text("P - Replay Player Movement\n");
 			ImGui::Separator();
 			ImGui::TextColored(v4Color2, m_pSystem->GetAppName().c_str());
 		}

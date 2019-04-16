@@ -6,6 +6,7 @@ Date: 2017/07
 #define __MYENTITY_H_
 
 #include "MyRigidBody.h"
+#include "Definitions.h"
 
 namespace Simplex
 {
@@ -29,6 +30,7 @@ class MyEntity
 	static std::map<String, MyEntity*> m_IDMap; //a map of the unique ID's
 
 public:
+	vector3 curvel = vector3(0.0f);
 	/*
 	Usage: Constructor that specifies the name attached to the MyEntity
 	Arguments:
