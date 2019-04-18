@@ -13,7 +13,7 @@ namespace Simplex
 		static uint m_uOctantCount; // stores the number of octants instantiated
 		static uint m_uMaxLevel; // stores the maximum level an octant can go to
 		static uint m_uIdealEntityCount; // how many ideal entities this object will have
-
+		bool m_toggleDisplay; // toggles the display of the octree
 		uint m_uID = 0; // stores the current ID of the octant
 		uint m_uLevel = 0; // stores the current level of the octant
 		uint m_uChildren = 0; // number of children on the octant, (will be 0 or 8)

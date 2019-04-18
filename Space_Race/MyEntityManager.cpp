@@ -274,6 +274,13 @@ Simplex::MyEntity* Simplex::MyEntityManager::GetEntity(uint a_uIndex)
 
 	return m_mEntityArray[a_uIndex];
 }
+void Simplex::MyEntityManager::showCollisionBoxes(bool show)
+{
+	// iterate through entities and properly show or not show ARBBs
+	for (int i = 0; i < m_uEntityCount; i++) {
+		m_mEntityArray[i]->GetRigidBody()->SetVisibleOBB(show);
+	}
+}
 void Simplex::MyEntityManager::AddEntityToRenderList(uint a_uIndex, bool a_bRigidBody)
 {
 	//if out of bounds will do it for all
