@@ -47,6 +47,7 @@ void Application::DrawGUI(void)
 			ImGui::Separator();
 			ImGui::Text("Controls:\n");
 			ImGui::Text("Arrow Keys - Move Spaceship\n");
+			ImGui::Text("Add/Subtract cones - LCtrl/RCtrl\n");
 			ImGui::Separator();
 			ImGui::Text("Octree Controls:\n");
 			ImGui::Text("Octants (Disabled at 0): %d\n", m_uOctantLevels);
@@ -63,6 +64,7 @@ void Application::DrawGUI(void)
 			ImGui::Text("O to toggle octree display\n");
 			ImGui::Separator();
 			ImGui::TextColored(v4Color2, m_pSystem->GetAppName().c_str());
+			ImGui::Text("Press I to toggle UI");
 		}
 		ImGui::End();
 	}
