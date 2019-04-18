@@ -29,6 +29,20 @@ void Application::InitVariables(void)
 		AXIS_Y);					//Up
 
 
+	//initialize sound
+	String sRoute = m_pSystem->m_pFolder->GetFolderData();
+	sRoute += m_pSystem->m_pFolder->GetFolderAudio();
+
+	//Background music
+	m_soundBGM.openFromFile(sRoute + "space.wav");
+	m_soundBGM.play();
+	m_soundBGM.setLoop(true);
+
+	//sound effects
+	m_soundBuffer.loadFromFile(sRoute + "lapProgression.wav");
+	m_sound.setBuffer(m_soundBuffer);
+
+	
 
 	m_pLightMngr->SetPosition(vector3(0.0f, 3.0f, 13.0f), 1); //set the position of first light (0 is reserved for ambient light)
 
@@ -180,6 +194,9 @@ void Application::Update(void)
 		// if race has not started yet
 		if (lapNumber != 0)
 		{
+			// play finished lap sound
+			m_sound.play();
+
 			m_dLastTime = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 			if (m_dLastTime < m_dBestTime)m_dBestTime = m_dLastTime;
 		}
