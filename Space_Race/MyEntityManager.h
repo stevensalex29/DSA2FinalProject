@@ -69,6 +69,12 @@ public:
 	*/
 	MyEntity* GetEntity(uint a_uIndex = -1);
 	/*
+	USAGE: Will toggle display of rigidbodies
+	ARGUMENTS: bool show -> whether the display should show or not
+	OUTPUT: ---
+	*/
+	void showCollisionBoxes(bool show);
+	/*
 	USAGE: Will update the MyEntity manager
 	ARGUMENTS: ---
 	OUTPUT: ---

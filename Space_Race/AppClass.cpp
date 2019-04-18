@@ -399,6 +399,9 @@ void Application::Update(void)
 	SafeDelete(m_pRoot);
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
+	// Toggle displays
+	m_pEntityMngr->showCollisionBoxes(m_toggleCollisionDisplay);
+
 	//Update Entity Manager
 	m_pEntityMngr->Update();
 
@@ -412,9 +415,9 @@ void Application::Display(void)
 
 	//display octree
 	if (m_uOctantID == -1)
-		m_pRoot->Display();
+		if(m_toggleOctreeDisplay)m_pRoot->Display();
 	else
-		m_pRoot->Display(m_uOctantID);
+		if(m_toggleOctreeDisplay)m_pRoot->Display(m_uOctantID);
 	
 	// draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();

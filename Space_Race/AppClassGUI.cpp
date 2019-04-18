@@ -48,15 +48,19 @@ void Application::DrawGUI(void)
 			ImGui::Text("Controls:\n");
 			ImGui::Text("Arrow Keys - Move Spaceship\n");
 			ImGui::Separator();
+			ImGui::Text("Octree Controls:\n");
+			ImGui::Text("Octants (Disabled at 0): %d\n", m_uOctantLevels);
+			ImGui::Text("Change subdivisions +-\n");
+			ImGui::Separator();
 			ImGui::Text("Camera Movement:\n");
 			ImGui::Text("Hold R - Camera Lookback\n");
 			ImGui::Separator();
 			ImGui::Text("Extra Features:\n");
 			ImGui::Text("Automatic replay after laps\n");
 			ImGui::Separator();
-			ImGui::Text("Octree Controls:\n");
-			ImGui::Text("Change subdivisions +-\n");
-			ImGui::Text("Change octant - PageUp\PageDown\n");
+			ImGui::Text("Display:\n");
+			ImGui::Text("C to toggle collision box display\n");
+			ImGui::Text("O to toggle octree display\n");
 			ImGui::Separator();
 			ImGui::TextColored(v4Color2, m_pSystem->GetAppName().c_str());
 		}

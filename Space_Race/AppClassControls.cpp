@@ -114,6 +114,12 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 		bFPSControl = !bFPSControl;
 		m_pCameraMngr->SetFPS(bFPSControl);
 		break;
+	case sf::Keyboard::C:
+		m_toggleCollisionDisplay = !m_toggleCollisionDisplay;
+		break;
+	case sf::Keyboard::O:
+		m_toggleOctreeDisplay = !m_toggleOctreeDisplay;
+		break;
 	case sf::Keyboard::PageUp:
 		++m_uOctantID;
 		if (m_uOctantID >= m_pRoot->GetOctantCount())

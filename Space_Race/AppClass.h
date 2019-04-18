@@ -46,6 +46,8 @@ public:
 	vector3 v3PositionGhost; // for replaying level recordings
 	vector3 v3Center;
 	bool m_bCircularTrackReset;
+	bool m_toggleOctreeDisplay;
+	bool m_toggleCollisionDisplay;
 	float shipRot = 0.0f;
 	float shipRotGhost = 0.0f; // for replaying level recordings
 	float cameraRot = 0.0f;
