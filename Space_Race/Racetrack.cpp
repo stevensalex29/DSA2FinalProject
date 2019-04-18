@@ -6,6 +6,7 @@ Racetrack::Racetrack(MyEntityManager ** m_ent, uint* uIndex)
 {
 	m_eTrafficConesList = new MyEntity*[10000];
 	m_vConeSetPositions = new vector3[10000];
+	originalPositions = new vector3[10000];
 	m_uNumConePositions = 0;
 	configuration = new RacetrackConfiguration();
 	this->uIndex = uIndex;
@@ -22,6 +23,7 @@ Racetrack::~Racetrack()
 void Simplex::Racetrack::CreateTrafficConeAt(vector3 position, vector3 size) {
 	m_ent->AddEntity("AndyIsTheTeamArtist\\TrafficCone.obj");
 	matrix4 trafficConeMatrix = glm::translate(position);
+	originalPositions[configuration->numcones] = position;
 	m_ent->SetModelMatrix(trafficConeMatrix * glm::scale(size));
 	m_eTrafficConesList[configuration->numcones] = m_ent->GetEntity(*uIndex);
 	(*uIndex)++;
@@ -43,5 +45,17 @@ void Simplex::Racetrack::CreateRaceTrackOf(RacetrackConfiguration config)
 		CreateTrafficConeRowAt(curPos, config.basespan, curangle);
 		curangle += config.variance;
 		curPos += vector3(cos(curangle) * config.conespacing, 0.0f, sin(curangle) * config.conespacing);
+	}
+}
+
+void Simplex::Racetrack::ResetPositions() {
+	for (int i = 0; i < configuration->conelength * 2; i++) {
+		m_eTrafficConesList[i]->curvel = vector3(0.0f);
+		m_eTrafficConesList[i]->SetModelMatrix(glm::scale(glm::translate(IDENTITY_M4, originalPositions[i]), vector3(0.2f)));
+	}
+	while (configuration->numcones > configuration->conelength * 2) {
+		(*uIndex)--;
+		configuration->numcones -= 1;
+		m_ent->RemoveEntity(*uIndex);
 	}
 }
