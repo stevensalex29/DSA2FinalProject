@@ -44,7 +44,6 @@ void Application::DrawGUI(void)
 			ImGui::TextColored(v4Color, team.c_str());
 			ImGui::Text("FrameRate: %.2f [FPS] -> %.3f [ms/frame]\n",
 				ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
-			ImGui::Text("Objects: %d\n", m_uObjects);
 			ImGui::Separator();
 			ImGui::Text("Controls:\n");
 			ImGui::Text("Arrow Keys - Move Spaceship\n");
