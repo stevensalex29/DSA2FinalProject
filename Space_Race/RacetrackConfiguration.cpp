@@ -14,6 +14,7 @@ RacetrackConfiguration::RacetrackConfiguration()
 	boundZ = 0.0f;
 	randomsection = 10;
 	circularTrack = true;
+	numcones = 0;
 }
 
 RacetrackConfiguration::RacetrackConfiguration(vector3 startPos, int conelength, float basespan, float variance, float boundX, float boundY, int randomsection = 10, bool circularTrack = false)

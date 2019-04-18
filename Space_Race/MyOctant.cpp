@@ -1,7 +1,7 @@
 #include "MyOctant.h"
 using namespace Simplex;
 uint MyOctant::m_uOctantCount = 0;
-uint MyOctant::m_uMaxLevel = 3;
+uint MyOctant::m_uMaxLevel = 10;
 uint MyOctant::m_uIdealEntityCount = 5;
 uint MyOctant::GetOctantCount(void) { return m_uOctantCount; }
 void MyOctant::Init(void){

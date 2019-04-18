@@ -29,6 +29,7 @@ namespace Simplex {
 		float boundZ;
 		int randomsection;
 		bool circularTrack;
+		int numcones;
 	};
 }
 

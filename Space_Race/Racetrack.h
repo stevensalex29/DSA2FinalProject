@@ -14,6 +14,7 @@ namespace Simplex {
 		MyEntity** m_eTrafficConesList;
 		MyEntityManager* m_ent;
 		vector3* m_vConeSetPositions;
+		vector3* originalPositions;
 		uint* uIndex;
 
 		Racetrack(MyEntityManager** m_ent, uint* uIndex);
@@ -24,6 +25,7 @@ namespace Simplex {
 		ARGUMENTS: Just the config. Details of what the variables in the config are provided in RacetrackConfiguration.h.
 		*/
 		void CreateRaceTrackOf(RacetrackConfiguration config);
+		void ResetPositions();
 		/*
 		USAGE: Creates a row of (two) traffic cones at a position. The span is the radius of how far apart the
 		traffic cones are from each other. The xPosDegreeAngle is the rotation along the x axis that the span is.

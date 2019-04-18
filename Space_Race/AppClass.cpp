@@ -129,12 +129,12 @@ int Simplex::Application::ClosestPositionIndex()
 
 void Application::doCollisionStuffs() {
 	Racetrack * firsttrack = racetrackList[0];
-	for (int i = 0; i < firsttrack->configuration->conelength * 2; i++) {
+	for (int i = 0; i < firsttrack->configuration->numcones; i++) {
 		if (firsttrack->m_eTrafficConesList[i]->IsColliding(m_eSpaceship)) {
 			firsttrack->m_eTrafficConesList[i]->curvel += vector3(2.5f, 0.0f, 2.5f) * vector3(sin(shipRot), 0, cos(shipRot));
 		}
 		if (glm::length(firsttrack->m_eTrafficConesList[i]->curvel) > 0.0f) {
-			for (int j = i; j < firsttrack->configuration->conelength * 2; j++) {
+			for (int j = i; j < firsttrack->configuration->numcones; j++) {
 				//j = i: so that we don't recheck cones and infinitely multiply the distance
 				if (firsttrack->m_eTrafficConesList[j]->IsColliding(firsttrack->m_eTrafficConesList[i])) {
 					firsttrack->m_eTrafficConesList[j]->curvel += vector3(1.5f, 0.0f, 1.5f) * firsttrack->m_eTrafficConesList[i]->curvel;
@@ -143,7 +143,7 @@ void Application::doCollisionStuffs() {
 			}
 		}
 	}
-	for (int i = 0; i < firsttrack->configuration->conelength * 2; i++) {
+	for (int i = 0; i < firsttrack->configuration->numcones; i++) {
 		firsttrack->m_eTrafficConesList[i]->SetModelMatrix(glm::translate(firsttrack->m_eTrafficConesList[i]->GetModelMatrix(), firsttrack->m_eTrafficConesList[i]->curvel));
 		firsttrack->m_eTrafficConesList[i]->curvel = firsttrack->m_eTrafficConesList[i]->curvel * 0.98f;
 	}
@@ -273,6 +273,39 @@ void Application::Update(void)
 	if (lapNumber != 0)
 	{
 		m_dCurrentTime = std::chrono::duration_cast<std::chrono::seconds>(curr - start).count();
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+		for (int i = 0; i < firsttrack->configuration->numcones; i++) {
+			firsttrack->m_eTrafficConesList[i]->curvel = vector3((rand() % 20 - rand() % 10 - 5) / 4.0f, 0.0f, (rand() % 20 - rand() % 10 - 5) / 4.0f);
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
+		firsttrack->ResetPositions();
+	}
+
+	// add/subtract cones
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+	{
+		for (int i = 0; i < 4; i++) {
+			m_pEntityMngr->AddEntity("AndyIsTheTeamArtist\\TrafficCone.obj");
+			matrix4 trafficConeMatrix = glm::translate(vector3((rand() % 200) - (rand() % 100), 0.0f, (rand() % 200) - (rand() % 100) - 50));
+			m_pEntityMngr->SetModelMatrix(trafficConeMatrix * glm::scale(vector3((rand() % 10) * 0.05f)));
+			firsttrack->m_eTrafficConesList[firsttrack->configuration->numcones] = m_pEntityMngr->GetEntity(uIndex);
+			firsttrack->configuration->numcones += 1;
+			(uIndex)++;
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
+	{
+		// let players subtract cones to a point
+		if (firsttrack->configuration->numcones > firsttrack->configuration->conelength * 2) {
+			for (int i = 0; i < 4; i++) {
+				(uIndex)--;
+				firsttrack->configuration->numcones -= 1;
+				m_pEntityMngr->RemoveEntity((uIndex));
+			}
+		}
 	}
 
 	// move forward
