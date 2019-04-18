@@ -258,7 +258,6 @@ void Application::Update(void)
 		m_dCurrentTime = std::chrono::duration_cast<std::chrono::seconds>(curr - start).count();
 	}
 
-<<<<<<< HEAD
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 		for (int i = 0; i < firsttrack->configuration->numcones; i++) {
 			firsttrack->m_eTrafficConesList[i]->curvel = vector3((rand() % 20 - rand() % 10 - 5) / 4.0f, 0.0f, (rand() % 20 - rand() % 10 - 5) / 4.0f);
@@ -268,9 +267,7 @@ void Application::Update(void)
 		firsttrack->ResetPositions();
 	}
 
-=======
 	// add/subtract cones
->>>>>>> fc5a46b8f3ddb873b3fc47b0f6bcf328f9088560
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
 	{
 		for (int i = 0; i < 4; i++) {
