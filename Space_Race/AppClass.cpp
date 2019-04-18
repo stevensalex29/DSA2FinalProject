@@ -258,6 +258,7 @@ void Application::Update(void)
 		m_dCurrentTime = std::chrono::duration_cast<std::chrono::seconds>(curr - start).count();
 	}
 
+	// add/subtract cones
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
 	{
 		for (int i = 0; i < 4; i++) {
@@ -267,6 +268,17 @@ void Application::Update(void)
 			firsttrack->m_eTrafficConesList[firsttrack->configuration->numcones] = m_pEntityMngr->GetEntity(uIndex);
 			firsttrack->configuration->numcones += 1;
 			(uIndex)++;
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
+	{
+		// let players subtract cones to a point
+		if (firsttrack->configuration->numcones > firsttrack->configuration->conelength * 2) {
+			for (int i = 0; i < 4; i++) {
+				(uIndex)--;
+				firsttrack->configuration->numcones -= 1;
+				m_pEntityMngr->RemoveEntity((uIndex));
+			}
 		}
 	}
 

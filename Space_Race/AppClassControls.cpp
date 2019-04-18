@@ -120,6 +120,9 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 	case sf::Keyboard::O:
 		m_toggleOctreeDisplay = !m_toggleOctreeDisplay;
 		break;
+	case sf::Keyboard::I:
+		m_bGUI_Main = !m_bGUI_Main;
+		break;
 	case sf::Keyboard::PageUp:
 		++m_uOctantID;
 		if (m_uOctantID >= m_pRoot->GetOctantCount())
