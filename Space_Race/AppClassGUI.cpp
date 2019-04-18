@@ -48,6 +48,7 @@ void Application::DrawGUI(void)
 			ImGui::Text("Controls:\n");
 			ImGui::Text("Arrow Keys - Move Spaceship\n");
 			ImGui::Text("Add/Subtract cones - LCtrl/RCtrl\n");
+			ImGui::Text("Reset cone positions - RShift\n");
 			ImGui::Separator();
 			ImGui::Text("Octree Controls:\n");
 			ImGui::Text("Octants (Disabled at 0): %d\n", m_uOctantLevels);
@@ -58,6 +59,7 @@ void Application::DrawGUI(void)
 			ImGui::Separator();
 			ImGui::Text("Extra Features:\n");
 			ImGui::Text("Automatic replay after laps\n");
+			ImGui::Text("Randomize cone velocity - LShift\n");
 			ImGui::Separator();
 			ImGui::Text("Display:\n");
 			ImGui::Text("C to toggle collision box display\n");
