@@ -4,8 +4,8 @@ using namespace Simplex;
 
 Racetrack::Racetrack(MyEntityManager ** m_ent, uint* uIndex)
 {
-	m_eTrafficConesList = new MyEntity*[1000];
-	m_vConeSetPositions = new vector3[1000];
+	m_eTrafficConesList = new MyEntity*[10000];
+	m_vConeSetPositions = new vector3[10000];
 	m_uNumConePositions = 0;
 	configuration = new RacetrackConfiguration();
 	this->uIndex = uIndex;
@@ -23,8 +23,9 @@ void Simplex::Racetrack::CreateTrafficConeAt(vector3 position, vector3 size) {
 	m_ent->AddEntity("AndyIsTheTeamArtist\\TrafficCone.obj");
 	matrix4 trafficConeMatrix = glm::translate(position);
 	m_ent->SetModelMatrix(trafficConeMatrix * glm::scale(size));
-	m_eTrafficConesList[*uIndex] = m_ent->GetEntity(*uIndex);
+	m_eTrafficConesList[configuration->numcones] = m_ent->GetEntity(*uIndex);
 	(*uIndex)++;
+	configuration->numcones++;
 }
 
 void Simplex::Racetrack::CreateTrafficConeRowAt(vector3 startPos, float span, float xPosDegreeAngle) {
