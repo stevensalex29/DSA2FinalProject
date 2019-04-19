@@ -123,6 +123,16 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 	case sf::Keyboard::I:
 		m_bGUI_Main = !m_bGUI_Main;
 		break;
+	case sf::Keyboard::M:
+		ismuted = !ismuted;
+		if (!ismuted) {
+			m_soundBGM.setVolume(100);
+			//m_soundBGM.setLoop(true);
+		}
+		else {
+			m_soundBGM.setVolume(0);
+		}
+		break;
 	case sf::Keyboard::PageUp:
 		++m_uOctantID;
 		if (m_uOctantID >= m_pRoot->GetOctantCount())

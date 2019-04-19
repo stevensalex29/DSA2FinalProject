@@ -60,6 +60,7 @@ void Application::DrawGUI(void)
 			ImGui::Text("Extra Features:\n");
 			ImGui::Text("Automatic replay after laps\n");
 			ImGui::Text("Randomize cone velocity - LShift\n");
+			ImGui::Text("Press M for mute/unmute\n");
 			ImGui::Separator();
 			ImGui::Text("Display:\n");
 			ImGui::Text("C to toggle collision box display\n");

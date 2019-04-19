@@ -16,6 +16,7 @@ namespace Simplex {
 		vector3* m_vConeSetPositions;
 		vector3* originalPositions;
 		uint* uIndex;
+		int conearraysize = 100;
 
 		Racetrack(MyEntityManager** m_ent, uint* uIndex);
 		~Racetrack();
@@ -36,6 +37,7 @@ namespace Simplex {
 		ARGUMENTS: position, size. These attributes apply directly to the traffic cone model and bounding box.
 		*/
 		void CreateTrafficConeAt(vector3 position, vector3 size);
+		void CreateRandomCone();
 	};
 }
 

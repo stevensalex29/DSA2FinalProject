@@ -39,10 +39,8 @@ void Application::InitVariables(void)
 	m_soundBGM.setLoop(true);
 
 	//sound effects
-	m_soundBuffer.loadFromFile(sRoute + "lapProgression.wav");
+	m_soundBuffer.loadFromFile(sRoute + "memelap.wav");
 	m_sound.setBuffer(m_soundBuffer);
-
-	
 
 	m_pLightMngr->SetPosition(vector3(0.0f, 3.0f, 13.0f), 1); //set the position of first light (0 is reserved for ambient light)
 
@@ -55,22 +53,24 @@ void Application::InitVariables(void)
 
 	// create traffic cones
 	racetrackList = new Racetrack*[20];
-	racetrackList[0] = new Racetrack(&m_pEntityMngr, &uIndex);
-	Racetrack* firsttrack = racetrackList[0];
-	firsttrack->configuration->basespan = 6.0f;
-	firsttrack->CreateRaceTrackOf(*(firsttrack->configuration));
-	m_fConeSpan = firsttrack->configuration->basespan;
+	for (int i = 0; i < 20; i++) {
+		racetrackList[i] = new Racetrack(&m_pEntityMngr, &uIndex);
+	}
+	curtrack = racetrackList[0];
+	curtrack->configuration->basespan = 6.0f;
+	curtrack->CreateRaceTrackOf(*(curtrack->configuration));
+	m_fConeSpan = curtrack->configuration->basespan;
 
-	//firsttrack->CreateRaceTrackOf();
+	//curtrack->CreateRaceTrackOf();
 	//vector3(0.0f, 0.0f, 0.0f), 100, 2.0f, 2.5f, glm::radians(3.6f), 0.0f, 0.0f
 
 	// set initial reset position, next reset position, and finish position
 
-	if (firsttrack->m_uNumConePositions > 0) {
-		m_vResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
+	if (curtrack->m_uNumConePositions > 0) {
+		m_vResetPosition = curtrack->m_vConeSetPositions[m_uCurrentConeIndex];
 		m_uCurrentConeIndex++;
-		if (m_uCurrentConeIndex < firsttrack->m_uNumConePositions) m_vNextResetPosition = firsttrack->m_vConeSetPositions[m_uCurrentConeIndex];
-		m_vFinishPosition = firsttrack->m_vConeSetPositions[firsttrack->m_uNumConePositions - 1];
+		if (m_uCurrentConeIndex < curtrack->m_uNumConePositions) m_vNextResetPosition = curtrack->m_vConeSetPositions[m_uCurrentConeIndex];
+		m_vFinishPosition = curtrack->m_vConeSetPositions[curtrack->m_uNumConePositions - 1];
 	}
 	
 	// in a 3-lap race, the laps are 1, 2, 3
@@ -128,24 +128,23 @@ int Simplex::Application::ClosestPositionIndex()
 }
 
 void Application::doCollisionStuffs() {
-	Racetrack * firsttrack = racetrackList[0];
-	for (int i = 0; i < firsttrack->configuration->numcones; i++) {
-		if (firsttrack->m_eTrafficConesList[i]->IsColliding(m_eSpaceship)) {
-			firsttrack->m_eTrafficConesList[i]->curvel += vector3(2.5f, 0.0f, 2.5f) * vector3(sin(shipRot), 0, cos(shipRot));
+	for (int i = 0; i < curtrack->configuration->numcones; i++) {
+		if (curtrack->m_eTrafficConesList[i]->IsColliding(m_eSpaceship)) {
+			curtrack->m_eTrafficConesList[i]->curvel += vector3(2.5f, 0.0f, 2.5f) * vector3(sin(shipRot), 0, cos(shipRot));
 		}
-		if (glm::length(firsttrack->m_eTrafficConesList[i]->curvel) > 0.0f) {
-			for (int j = i; j < firsttrack->configuration->numcones; j++) {
+		if (glm::length(curtrack->m_eTrafficConesList[i]->curvel) > 0.0f) {
+			for (int j = i; j < curtrack->configuration->numcones; j++) {
 				//j = i: so that we don't recheck cones and infinitely multiply the distance
-				if (firsttrack->m_eTrafficConesList[j]->IsColliding(firsttrack->m_eTrafficConesList[i])) {
-					firsttrack->m_eTrafficConesList[j]->curvel += vector3(1.5f, 0.0f, 1.5f) * firsttrack->m_eTrafficConesList[i]->curvel;
-					firsttrack->m_eTrafficConesList[i]->curvel *= .4f;
+				if (curtrack->m_eTrafficConesList[j]->IsColliding(curtrack->m_eTrafficConesList[i])) {
+					curtrack->m_eTrafficConesList[j]->curvel += vector3(1.5f, 0.0f, 1.5f) * curtrack->m_eTrafficConesList[i]->curvel;
+					curtrack->m_eTrafficConesList[i]->curvel *= .4f;
 				}
 			}
 		}
 	}
-	for (int i = 0; i < firsttrack->configuration->numcones; i++) {
-		firsttrack->m_eTrafficConesList[i]->SetModelMatrix(glm::translate(firsttrack->m_eTrafficConesList[i]->GetModelMatrix(), firsttrack->m_eTrafficConesList[i]->curvel));
-		firsttrack->m_eTrafficConesList[i]->curvel = firsttrack->m_eTrafficConesList[i]->curvel * 0.98f;
+	for (int i = 0; i < curtrack->configuration->numcones; i++) {
+		curtrack->m_eTrafficConesList[i]->SetModelMatrix(glm::translate(curtrack->m_eTrafficConesList[i]->GetModelMatrix(), curtrack->m_eTrafficConesList[i]->curvel));
+		curtrack->m_eTrafficConesList[i]->curvel = curtrack->m_eTrafficConesList[i]->curvel * 0.98f;
 	}
 }
 
@@ -158,17 +157,15 @@ void Application::Update(void)
 	ArcBall();
 
 
-	Racetrack * firsttrack = racetrackList[0];
-
 	doCollisionStuffs();
 
-	vector3 halfWidth = firsttrack->m_eTrafficConesList[0]->GetRigidBody()->GetHalfWidth();
+	vector3 halfWidth = curtrack->m_eTrafficConesList[0]->GetRigidBody()->GetHalfWidth();
 	float offset = 1.5f;
 	float maxDistance = m_fConeSpan + halfWidth.x + offset;
 
 	//find reset position
 	if (ClosestPositionIndex() > m_uCurrentConeIndex) {
-		m_vResetPosition = firsttrack->m_vConeSetPositions[ClosestPositionIndex()];
+		m_vResetPosition = curtrack->m_vConeSetPositions[ClosestPositionIndex()];
 	}
 
 	//check bounds
@@ -177,13 +174,13 @@ void Application::Update(void)
 		if (m_uCurrentConeIndex < 0) {
 			m_uCurrentConeIndex = 0;
 		}
-		if (firsttrack->m_vConeSetPositions[0] == m_vResetPosition) {
-			v3Position = firsttrack->m_vConeSetPositions[1];
+		if (curtrack->m_vConeSetPositions[0] == m_vResetPosition) {
+			v3Position = curtrack->m_vConeSetPositions[1];
 		}
 		else {
 			v3Position = m_vResetPosition;
 		}
-		m_vResetPosition = firsttrack->m_vConeSetPositions[ClosestPositionIndex()];
+		m_vResetPosition = curtrack->m_vConeSetPositions[ClosestPositionIndex()];
 	}
 	m_uCurrentConeIndex = ClosestPositionIndex();
 
@@ -195,7 +192,9 @@ void Application::Update(void)
 		if (lapNumber != 0)
 		{
 			// play finished lap sound
-			m_sound.play();
+			if (!ismuted) {
+				m_sound.play();
+			}
 
 			m_dLastTime = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 			if (m_dLastTime < m_dBestTime)m_dBestTime = m_dLastTime;
@@ -257,12 +256,12 @@ void Application::Update(void)
 	}
 	oldIndex = m_uCurrentConeIndex;
 
-	if (m_uCurrentConeIndex == firsttrack->configuration->conelength && !lap) {
+	if (m_uCurrentConeIndex == curtrack->configuration->conelength && !lap) {
 		lap = true;
 		// end timer, update best time
 		
 	}
-	if (m_uCurrentConeIndex != firsttrack->configuration->conelength && lap) {
+	if (m_uCurrentConeIndex != curtrack->configuration->conelength && lap) {
 		lap = false;
 	}
 
@@ -276,33 +275,28 @@ void Application::Update(void)
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-		for (int i = 0; i < firsttrack->configuration->numcones; i++) {
-			firsttrack->m_eTrafficConesList[i]->curvel = vector3((rand() % 20 - rand() % 10 - 5) / 4.0f, 0.0f, (rand() % 20 - rand() % 10 - 5) / 4.0f);
+		for (int i = 0; i < curtrack->configuration->numcones; i++) {
+			curtrack->m_eTrafficConesList[i]->curvel = vector3((rand() % 20 - rand() % 10 - 5) / 4.0f, 0.0f, (rand() % 20 - rand() % 10 - 5) / 4.0f);
 		}
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
-		firsttrack->ResetPositions();
+		curtrack->ResetPositions();
 	}
 
 	// add/subtract cones
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
 	{
 		for (int i = 0; i < 4; i++) {
-			m_pEntityMngr->AddEntity("AndyIsTheTeamArtist\\TrafficCone.obj");
-			matrix4 trafficConeMatrix = glm::translate(vector3((rand() % 200) - (rand() % 100), 0.0f, (rand() % 200) - (rand() % 100) - 50));
-			m_pEntityMngr->SetModelMatrix(trafficConeMatrix * glm::scale(vector3((rand() % 10) * 0.05f)));
-			firsttrack->m_eTrafficConesList[firsttrack->configuration->numcones] = m_pEntityMngr->GetEntity(uIndex);
-			firsttrack->configuration->numcones += 1;
-			(uIndex)++;
+			curtrack->CreateRandomCone();
 		}
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
 	{
 		// let players subtract cones to a point
-		if (firsttrack->configuration->numcones > firsttrack->configuration->conelength * 2) {
+		if (curtrack->configuration->numcones > curtrack->configuration->conelength * 2) {
 			for (int i = 0; i < 4; i++) {
 				(uIndex)--;
-				firsttrack->configuration->numcones -= 1;
+				curtrack->configuration->numcones -= 1;
 				m_pEntityMngr->RemoveEntity((uIndex));
 			}
 		}

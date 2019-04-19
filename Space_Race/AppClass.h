@@ -33,6 +33,7 @@ public:
 	MyEntity* m_eSpaceship = nullptr; // Represents the player spaceship
 	MyEntity* m_eSpaceshipGhost = nullptr; // Represents the ghost spaceship
 	Racetrack** racetrackList = nullptr;
+	Racetrack* curtrack = nullptr;
 	vector3 m_vResetPosition;
 	vector3 m_vNextResetPosition;
 	vector3 m_vFinishPosition;
@@ -66,6 +67,8 @@ public:
 	sf::SoundBuffer m_soundBuffer; //buffer to play sound from
 	sf::Sound m_sound; //sound effect
 	sf::Music m_soundBGM; //background music
+	bool ismuted = false;
+	bool keypressedlast = false;
 
 private:
 	String m_sProgrammer = "GoodFolderMaterial"; //programmer

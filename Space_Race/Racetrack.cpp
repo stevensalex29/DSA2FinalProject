@@ -4,9 +4,6 @@ using namespace Simplex;
 
 Racetrack::Racetrack(MyEntityManager ** m_ent, uint* uIndex)
 {
-	m_eTrafficConesList = new MyEntity*[10000];
-	m_vConeSetPositions = new vector3[10000];
-	originalPositions = new vector3[10000];
 	m_uNumConePositions = 0;
 	configuration = new RacetrackConfiguration();
 	this->uIndex = uIndex;
@@ -30,6 +27,25 @@ void Simplex::Racetrack::CreateTrafficConeAt(vector3 position, vector3 size) {
 	configuration->numcones++;
 }
 
+void Simplex::Racetrack::CreateRandomCone()
+{
+	if (configuration->numcones >= conearraysize) {
+		MyEntity** m_eTrafficConesList2 = new MyEntity*[conearraysize * 2];
+		for (int i = 0; i < conearraysize; i++) {
+			m_eTrafficConesList2[i] = m_eTrafficConesList[i];
+		}
+		delete m_eTrafficConesList;
+		m_eTrafficConesList = m_eTrafficConesList2;
+		conearraysize *= 2;
+	}
+	m_ent->AddEntity("AndyIsTheTeamArtist\\TrafficCone.obj");
+	matrix4 trafficConeMatrix = glm::translate(vector3((rand() % 200) - (rand() % 100), 0.0f, (rand() % 200) - (rand() % 100) - 50));
+	m_ent->SetModelMatrix(trafficConeMatrix * glm::scale(vector3((rand() % 10) * 0.05f)));
+	m_eTrafficConesList[configuration->numcones] = m_ent->GetEntity(*uIndex);
+	configuration->numcones += 1;
+	(*uIndex)++;
+}
+
 void Simplex::Racetrack::CreateTrafficConeRowAt(vector3 startPos, float span, float xPosDegreeAngle) {
 	CreateTrafficConeAt(vector3(startPos.x - cos(glm::radians(90.0f) + xPosDegreeAngle) * span, startPos.y, startPos.z - sin(glm::radians(90.0f) + xPosDegreeAngle) * span), vector3(0.2f));
 	CreateTrafficConeAt(vector3(startPos.x + cos(glm::radians(90.0f) + xPosDegreeAngle) * span, startPos.y, startPos.z + sin(glm::radians(90.0f) + xPosDegreeAngle) * span), vector3(0.2f));
@@ -39,6 +55,10 @@ void Simplex::Racetrack::CreateTrafficConeRowAt(vector3 startPos, float span, fl
 
 void Simplex::Racetrack::CreateRaceTrackOf(RacetrackConfiguration config)
 {
+	conearraysize = config.conelength * 2;
+	m_eTrafficConesList = new MyEntity*[conearraysize];
+	m_vConeSetPositions = new vector3[conearraysize];
+	originalPositions = new vector3[conearraysize];
 	float curangle = glm::radians(90.0f);
 	vector3 curPos = config.startPos;
 	for (int i = 0; i < config.conelength; i++) {
