@@ -233,7 +233,7 @@ void Application::ProcessJoystickMoved(sf::Event a_event)
 	int nAxis = a_event.joystickMove.axis;
 
 
-	v3Position += vector3(0.0f, 0.0f, fPosition/5);
+	//v3Position += vector3(0.0f, 0.0f, fPosition/5);
 
 	//invert vertical axis for sticks
 	if (nAxis == sf::Joystick::Axis::Y || nAxis == sf::Joystick::Axis::R)
