@@ -274,15 +274,6 @@ void Application::Update(void)
 		m_dCurrentTime = std::chrono::duration_cast<std::chrono::seconds>(curr - start).count();
 	}
 
-	//twirl feature - Controller
-	if (sf::Joystick::isConnected(0)) {
-		bool pressed = sf::Joystick::isButtonPressed(0, 2);
-		// Reverse Camera
-		if (pressed)
-		{
-			desiredCameraRot += 3.14159f;
-		}
-	}
 
 	if (sf::Joystick::isConnected(0)) {
 
@@ -416,6 +407,16 @@ void Application::Update(void)
 	vector3 camPos;
 
 	desiredCameraRot = shipRot;
+
+	//twirl feature - Controller
+	if (sf::Joystick::isConnected(0)) {
+		bool pressed = sf::Joystick::isButtonPressed(0, 2);
+		// Reverse Camera
+		if (pressed)
+		{
+			desiredCameraRot += 3.14159f;
+		}
+	}
 
 	// Reverse Camera
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
