@@ -274,6 +274,47 @@ void Application::Update(void)
 		m_dCurrentTime = std::chrono::duration_cast<std::chrono::seconds>(curr - start).count();
 	}
 
+	//twirl feature - Controller
+	if (sf::Joystick::isConnected(0)) {
+		bool pressed = sf::Joystick::isButtonPressed(0, 2);
+		// Reverse Camera
+		if (pressed)
+		{
+			desiredCameraRot += 3.14159f;
+		}
+	}
+
+	if (sf::Joystick::isConnected(0)) {
+
+		//joystick input
+		//float xJoy = sf::Joystick::getAxisPosition(0, sf::Joystick::X) * 0.002f;
+		float yJoy = sf::Joystick::getAxisPosition(0, sf::Joystick::Y) * 0.005f;
+
+		float secondXJoy = sf::Joystick::getAxisPosition(0, sf::Joystick::U) * 0.005f;
+
+
+
+		if (secondXJoy > 0.2f) {
+			shipRot -= 0.05f;
+		}
+		if (secondXJoy < -0.2f) {
+			shipRot += 0.05f;
+		}
+		if (yJoy < -0.2f) {
+			v3Position += vector3(sin(shipRot) / 2, 0.0f, cos(shipRot) / 2);
+		}
+		if (yJoy > 0.2f) {
+			v3Position += vector3(-sin(shipRot) / 2, 0.0f, -cos(shipRot) / 2);
+		}
+
+
+		// Reverse Camera
+		if (sf::Joystick::isButtonPressed(0, 4))
+		{
+			desiredCameraRot += 3.14159f;
+		}
+	}
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 		for (int i = 0; i < curtrack->configuration->numcones; i++) {
 			curtrack->m_eTrafficConesList[i]->curvel = vector3((rand() % 20 - rand() % 10 - 5) / 4.0f, 0.0f, (rand() % 20 - rand() % 10 - 5) / 4.0f);
