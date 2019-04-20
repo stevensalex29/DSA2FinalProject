@@ -410,11 +410,16 @@ void Application::Update(void)
 
 	//twirl feature - Controller
 	if (sf::Joystick::isConnected(0)) {
-		bool pressed = sf::Joystick::isButtonPressed(0, 2);
+		bool xPressed = sf::Joystick::isButtonPressed(0, 2);
+		bool bPressed = sf::Joystick::isButtonPressed(0, 1);
 		// Reverse Camera
-		if (pressed)
+		if (xPressed)
 		{
 			desiredCameraRot += 3.14159f;
+		}
+
+		if (bPressed) {
+			curtrack->ResetPositions();
 		}
 	}
 
