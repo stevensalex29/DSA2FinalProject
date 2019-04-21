@@ -86,6 +86,7 @@ void Application::InitVariables(void)
 	matrix4 m4PositionGhost = glm::translate(v3PositionGhost);
 	m_pEntityMngr->SetModelMatrix(m4PositionGhost);
 	m_eSpaceshipGhost = m_pEntityMngr->GetEntity(uIndex);
+	m_eSpaceshipGhost->forceNoCollision = true;
 	uIndex++;
 
 	// create octree

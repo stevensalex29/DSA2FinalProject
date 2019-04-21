@@ -239,6 +239,9 @@ bool Simplex::MyEntity::IsColliding(MyEntity* const other)
 	if (!m_bInMemory || !other->m_bInMemory)
 		return true;
 
+	if (forceNoCollision)
+		return false;
+
 	//if the entities are not living in the same dimension
 	//they are not colliding
 	if (!SharesDimension(other))

@@ -30,6 +30,7 @@ class MyEntity
 	static std::map<String, MyEntity*> m_IDMap; //a map of the unique ID's
 
 public:
+	bool forceNoCollision = false;
 	vector3 curvel = vector3(0.0f);
 	/*
 	Usage: Constructor that specifies the name attached to the MyEntity
