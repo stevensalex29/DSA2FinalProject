@@ -2,12 +2,8 @@
 #include <chrono>
 
 using namespace std;
-fstream readFile;
-fstream writeFile;
 int numberFramesWritten = 0;
 int numberFramesRead = 0;
-bool writing = false;
-bool reading = false;
 int lapNumber = 0;
 
 struct
@@ -204,55 +200,10 @@ void Application::Update(void)
 		start = std::chrono::steady_clock::now();
 
 		lapNumber++;
+		memcpy(&shipReadData[0], &shipWriteData[0], sizeof(shipReadData[0]) * numberFramesWritten);
+
 		numberFramesWritten = 0;
 		numberFramesRead = 0;
-
-		if (lapNumber >= 1)
-		{
-			writing = true;
-		}
-
-		/*
-		
-		READ ME
-
-		This system of managing read and write assumes
-		that this particular race is the first race you've ever done
-
-		If you want it to read data from a previous race,
-		that code comes later
-		
-		*/
-
-		// start reading file if you are on lap 2 or more
-		if (lapNumber >= 2)
-		{
-			reading = true;
-
-			// assuming this is your first race ever
-			// write the lap you just finished (previous lap)
-			if (writing)
-			{
-				char filename[100];
-				sprintf_s(filename, 99, "shipData%i.dat", lapNumber-1);
-				writeFile.open(filename, ios::out | ios::binary);
-				//source\repos\DSA2FinalProject\_Binary\shipData.dat
-
-				writeFile.write(reinterpret_cast<char*>(&shipWriteData[0]), sizeof(shipWriteData[0]) * 9999);
-				writeFile.close();
-			}
-
-			// assuming this is your first race ever
-			// read the lap you just finished (previous lap)
-			char filename[100];
-			sprintf_s(filename, 99, "shipData%i.dat", lapNumber-1);
-			readFile.open(filename, ios::in | ios::binary);
-			//source\repos\DSA2FinalProject\_Binary\shipData.dat
-
-			readFile.read(reinterpret_cast<char*>(&shipReadData[0]), sizeof(shipReadData[0]) * 9999);
-			readFile.close();
-		}
-
 	}
 	oldIndex = m_uCurrentConeIndex;
 
@@ -358,16 +309,7 @@ void Application::Update(void)
 		shipRot -= 0.05f;
 	}
 
-	// start writing
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
-	{
-		numberFramesWritten = 0;
-		numberFramesRead = 0;
-		writing = true;
-		reading = false;
-	}
-
-	if (writing)
+	if (lapNumber >= 1)
 	{
 		shipWriteData[numberFramesWritten].posX = v3Position.x;
 		shipWriteData[numberFramesWritten].posY = v3Position.y;
@@ -375,11 +317,9 @@ void Application::Update(void)
 		shipWriteData[numberFramesWritten].rot = shipRot;
 
 		numberFramesWritten++;
-
-		printf("recording\n");
 	}
 
-	if (reading)
+	if (lapNumber >= 2)
 	{
 		v3PositionGhost.x = shipReadData[numberFramesRead].posX;
 		v3PositionGhost.y = shipReadData[numberFramesRead].posY;
