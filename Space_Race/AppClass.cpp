@@ -326,6 +326,16 @@ void Application::Update(void)
 		v3PositionGhost.z = shipReadData[numberFramesRead].posZ;
 		shipRotGhost = shipReadData[numberFramesRead].rot;
 
+		// if nothing was recorded this frame
+		if (v3PositionGhost.x == 0 &&
+			v3PositionGhost.y == 0 &&
+			v3PositionGhost.z == 0 &&
+			shipRotGhost == 0)
+		{
+			// teleport ghost to oblivion
+			v3PositionGhost.y -= 100.0f;
+		}
+
 		numberFramesRead++;
 	}
 
