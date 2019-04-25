@@ -46,7 +46,7 @@ void Application::DrawGUI(void)
 				ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 			ImGui::Separator();
 			ImGui::Text("Controls:\n");
-			ImGui::Text("Arrow Keys - Move Spaceship\n");
+			ImGui::Text("WASD - Move Spaceship\n");
 			ImGui::Text("Add/Subtract cones - LCtrl/RCtrl\n");
 			ImGui::Text("Reset cone positions - RShift\n");
 			ImGui::Separator();
