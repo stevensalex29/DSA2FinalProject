@@ -5,25 +5,29 @@ void Application::DrawGUI(void)
 {
 #pragma region Debugging Information
 	//Print info on the screen
-	uint nEmptyLines = 20;
+
+	// display fps
+	m_pMeshMngr->Print("\t\t\t\t\t\t\t\t\t\t\t\t     FPS: " + std::to_string(m_pSystem->GetFPS()), C_YELLOW);
+
+	uint nEmptyLines = 19;
 	for (uint i = 0; i < nEmptyLines; ++i)
 		m_pMeshMngr->PrintLine("");//Add a line on top
 
+	// display current lap
+	m_pMeshMngr->PrintLine("Lap " + std::to_string(m_dCurrentLap));
+
 	// display current time
-	m_pMeshMngr->Print("Current Time: " + std::to_string((int)m_dCurrentTime) + "s\n");
+	m_pMeshMngr->PrintLine("Current Time: " + std::to_string((int)m_dCurrentTime) + "s");
 
 	// display previous time
-	if(m_dLastTime == std::numeric_limits<double>::max()) m_pMeshMngr->Print("Previous Time: NaN\n");
-	else m_pMeshMngr->Print("Previous Time: " + std::to_string((int)m_dLastTime) + "s\n");
+	if (m_dLastTime == std::numeric_limits<double>::max()) m_pMeshMngr->PrintLine("Previous Time: NaN");
+	else m_pMeshMngr->PrintLine("Previous Time: " + std::to_string((int)m_dLastTime) + "s");
 
 	// display best time
-	if (m_dBestTime == std::numeric_limits<double>::max()) m_pMeshMngr->Print("Best Time: NaN\n");
-	else m_pMeshMngr->Print("Best Time: " + std::to_string((int)m_dBestTime) + "s\n");
+	if (m_dBestTime == std::numeric_limits<double>::max()) m_pMeshMngr->PrintLine("Best Time: NaN");
+	else m_pMeshMngr->Print("Best Time: " + std::to_string((int)m_dBestTime) + "s");
 
-	//m_pMeshMngr->PrintLine("0", C_RED);
-
-	//m_pMeshMngr->Print("FPS:");
-	//m_pMeshMngr->PrintLine(std::to_string(m_pSystem->GetFPS()), C_RED);
+	
 #pragma endregion
 
 	//Calculate the window size to know how to draw
@@ -36,38 +40,46 @@ void Application::DrawGUI(void)
 	if (m_bGUI_Main)
 	{
 		ImGui::SetNextWindowPos(ImVec2(1, 1), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(340, 60), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(380, 60), ImGuiSetCond_FirstUseEver);
 		String sAbout = m_pSystem->GetAppName() + " - About";
 		ImGui::Begin(sAbout.c_str(), (bool*)0, window_flags);
 		{
-			String team = "Team: " + m_sProgrammer;
-			ImGui::TextColored(v4Color, team.c_str());
-			ImGui::Text("FrameRate: %.2f [FPS] -> %.3f [ms/frame]\n",
-				ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+			ImGui::TextColored(v4Color2,"Space Race");
+			String team = "Team " + m_sProgrammer;
+			ImGui::TextColored(v4Color2, team.c_str());
+			ImGui::TextColored(v4Color2,"Press I to toggle UI");
 			ImGui::Separator();
-			ImGui::Text("Controls:\n");
-			ImGui::Text("WASD - Move Spaceship\n");
-			ImGui::Text("Add/Subtract cones - LCtrl/RCtrl\n");
-			ImGui::Text("Reset cone positions - RShift\n");
-			ImGui::Separator();
-			ImGui::Text("Octree Controls:\n");
-			ImGui::Text("Octants (Disabled at 0): %d\n", m_uOctantLevels);
-			ImGui::Text("Change subdivisions +-\n");
-			ImGui::Separator();
-			ImGui::Text("Camera Movement:\n");
-			ImGui::Text("Hold R - Camera Lookback\n");
-			ImGui::Separator();
-			ImGui::Text("Extra Features:\n");
-			ImGui::Text("Automatic replay after laps\n");
-			ImGui::Text("Randomize cone velocity - LShift\n");
-			ImGui::Text("Press M for mute/unmute\n");
-			ImGui::Separator();
-			ImGui::Text("Display:\n");
-			ImGui::Text("C to toggle collision box display\n");
-			ImGui::Text("O to toggle octree display\n");
-			ImGui::Separator();
-			ImGui::TextColored(v4Color2, m_pSystem->GetAppName().c_str());
-			ImGui::Text("Press I to toggle UI");
+			if (ImGui::CollapsingHeader("Objective"))
+			{
+				ImGui::Text("Race around the track to try and get your best time!\n");
+				ImGui::Text("Watch the replay when you complete a lap.");
+			}
+			if (ImGui::CollapsingHeader("Controls"))
+			{
+				ImGui::Text("WASD - Move Spaceship\n");
+				ImGui::Text("Add/Subtract cones - LCtrl/RCtrl\n");
+				ImGui::Text("Reset cone positions - RShift\n");
+			}
+			if (ImGui::CollapsingHeader("Octree"))
+			{
+				ImGui::Text("Octant Level (Disabled at 0): %d\n", m_uOctantLevels);
+				ImGui::Text("Increment subdivisions with +\n");
+				ImGui::Text("Decrement subdivisions with -\n");
+			}
+			if (ImGui::CollapsingHeader("Camera"))
+			{
+				ImGui::Text("Hold R - Camera Lookback\n");
+			}
+			if (ImGui::CollapsingHeader("Display"))
+			{
+				ImGui::Text("C to toggle collision box display\n");
+				ImGui::Text("O to toggle octree display\n");
+			}
+			if (ImGui::CollapsingHeader("Extra Features"))
+			{
+				ImGui::Text("Randomize cone velocity - LShift\n");
+				ImGui::Text("Press M for mute/unmute\n");
+			}
 		}
 		ImGui::End();
 	}

@@ -3874,7 +3874,7 @@ static void ApplySizeFullWithConstraint(ImGuiWindow* window, ImVec2 new_size)
 // - Passing non-zero 'size' is roughly equivalent to calling SetNextWindowSize(size, ImGuiSetCond_FirstUseEver) prior to calling Begin().
 bool ImGui::Begin(const char* name, bool* p_open, ImGuiWindowFlags flags)
 {
-    return ImGui::Begin(name, p_open, ImVec2(0.f, 0.f), -1.0f, flags);
+    return ImGui::Begin(name, p_open, ImVec2(400.0f, 0.0f), -1.0f, flags);
 }
 
 bool ImGui::Begin(const char* name, bool* p_open, const ImVec2& size_on_first_use, float bg_alpha, ImGuiWindowFlags flags)

@@ -201,6 +201,7 @@ void Application::Update(void)
 		start = std::chrono::steady_clock::now();
 
 		lapNumber++;
+		m_dCurrentLap = lapNumber;
 		memcpy(&shipReadData[0], &shipWriteData[0], sizeof(shipReadData[0]) * numberFramesWritten);
 
 		numberFramesWritten = 0;

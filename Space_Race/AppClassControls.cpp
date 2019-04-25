@@ -133,16 +133,6 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 			m_soundBGM.setVolume(0);
 		}
 		break;
-	case sf::Keyboard::PageUp:
-		++m_uOctantID;
-		if (m_uOctantID >= m_pRoot->GetOctantCount())
-			m_uOctantID = - 1;
-		break;
-	case sf::Keyboard::PageDown:
-		--m_uOctantID;
-		if (m_uOctantID >= m_pRoot->GetOctantCount())
-			m_uOctantID = - 1;
-		break;
 	case sf::Keyboard::Add:
 		if (m_uOctantLevels < 4)
 		{
