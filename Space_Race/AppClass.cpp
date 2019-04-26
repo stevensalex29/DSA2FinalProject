@@ -73,7 +73,7 @@ void Application::InitVariables(void)
 	lapNumber = 0;
 
 	// create spaceship
-	v3Position = vector3(0,0,-10); // start before starting line, like Mario Kart
+	v3Position = vector3(0,0.5f,-10); // start before starting line, like Mario Kart
 	m_pEntityMngr->AddEntity("AndyIsTheTeamArtist\\Spaceship.obj");
 	matrix4 m4Position = glm::translate(v3Position);
 	m_pEntityMngr->SetModelMatrix(m4Position);
@@ -225,6 +225,17 @@ void Application::Update(void)
 	if (lapNumber != 0)
 	{
 		m_dCurrentTime = std::chrono::duration_cast<std::chrono::seconds>(curr - start).count();
+	}
+
+	if (m_fOffset >= 180.0f) m_fOffset = 0.0f;
+	else m_fOffset += .01f;
+
+	// make cones float
+	for (int i = 0; i < curtrack->configuration->numcones; i++) {
+		matrix4 matrix = curtrack->m_eTrafficConesList[i]->GetModelMatrix();
+		vector3 pos = vector3(0.0f, sin(m_fOffset + ((float)i / 8.0f))/60.0f, 0.0f);
+		matrix = glm::translate(matrix, pos);
+		curtrack->m_eTrafficConesList[i]->SetModelMatrix(matrix);
 	}
 
 
